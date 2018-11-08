@@ -1,5 +1,5 @@
-#define VS_SHADERMODEL vs_5_0
-#define PS_SHADERMODEL ps_5_0
+#define VS_SHADERMODEL vs_4_0
+#define PS_SHADERMODEL ps_4_0
 
 float4x4 World;
 float4x4 View;
@@ -8,8 +8,8 @@ float4x4 Projection;
 float4 AmbientColor = float4(1, 1, 1, 1);
 float AmbientIntensity = 0.1;
 
-int phongblinn;
-int textures;
+int phongblinn = 0;
+int textures = 0;
 
 float4x4 WorldInverseTranspose;
 
@@ -17,7 +17,7 @@ float3 DiffuseLightDirection = float3(10, 10, 0);
 float4 DiffuseColor = float4(1, 1, 1, 1);
 float DiffuseIntensity = 1.0;
 
-float Shininess = 200;
+float Shininess = 100;
 float4 SpecularColor = float4(1, 1, 1, 1);
 float SpecularIntensity = 1;
 float3 ViewVector;
@@ -34,14 +34,14 @@ sampler2D textureSampler = sampler_state {
 
 struct VertexShaderInput
 {
-    float4 Position : POSITION0;
+    float4 Position : SV_POSITION0;
 	float4 Normal : NORMAL0;
 	float2 TextureCoordinate : TEXCOORD0;
 };
 
 struct VertexShaderOutput
 {
-    float4 Position : POSITION0;
+    float4 Position : SV_POSITION0;
 	float3 WorldPosition : NORMAL0;
 	float3 Normal : TEXCOORD0;
 	float2 TextureCoordinate : TEXCOORD1;

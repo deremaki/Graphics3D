@@ -59,12 +59,12 @@
     <Content Include="Content\Const.fx" />
     <Content Include="Content\Gourand.fx" />
     <Content Include="Content\Phong.fx" />
+    <Content Include="Content\Point.fx" />
     <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>
     <MonoGameContentReference Include="Content\Content.mgcb" />
     <None Include="app.manifest" />
-    <None Include="Content\Shelby.fbx" />
     <None Include="Content\tree.fbx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -123,6 +123,8 @@ namespace Graphics3D
 
         public void Draw(GraphicsDevice graphicsDevice, Matrix world, Matrix view, Matrix projection, Color color)
         {
+            //I did not managed to draw this using shaders
+
             this.basicEffect.World = world;
             this.basicEffect.View = view;
             this.basicEffect.Projection = projection;

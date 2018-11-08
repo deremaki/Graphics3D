@@ -119,13 +119,16 @@ namespace Graphics3D
                 //var vecCart = CoordsHelper.SphericalToCartesian(vecSpher);
                 //cameraLookAt = vecCart + cameraPosition;
 
-                angleY = MathHelper.ToRadians(0.5f);
-                cameraUpVector = Vector3.Transform(cameraUpVector, Matrix.CreateFromAxisAngle(HorizontalVector, angleY));
+                //angleY = MathHelper.ToRadians(0.5f);
+                //cameraUpVector = Vector3.Transform(cameraUpVector, Matrix.CreateFromAxisAngle(HorizontalVector, angleY));
 
                 //Vector3 axis = cameraPosition - cameraLookAt;
                 //Vector3 axisUp = new Vector3(axis.X, -axis.Y, axis.Z);
                 //Vector3 right = Vector3.Cross(axis, axisUp);
                 //cameraLookAt = Vector3.Transform(cameraLookAt, Matrix.CreateFromAxisAngle(right, MathHelper.ToRadians(0.3f)));
+
+                //primitive, cause all others don't work
+                cameraLookAt += Vector3.Up;
             }
 
             else if (newState.IsKeyDown(Keys.Down))
@@ -136,13 +139,16 @@ namespace Graphics3D
                 //var vecCart = CoordsHelper.SphericalToCartesian(vecSpher);
                 //cameraLookAt = vecCart + cameraPosition;
 
-                angleY = MathHelper.ToRadians(-0.5f);
-                cameraUpVector = Vector3.Transform(cameraUpVector, Matrix.CreateFromAxisAngle(HorizontalVector, angleY));
+                //angleY = MathHelper.ToRadians(-0.5f);
+                //cameraUpVector = Vector3.Transform(cameraUpVector, Matrix.CreateFromAxisAngle(HorizontalVector, angleY));
 
                 //Vector3 axis = cameraPosition - cameraLookAt;
                 //Vector3 axisUp = new Vector3(axis.X, -axis.Y, axis.Z);
                 //Vector3 right = Vector3.Cross(axis, axisUp);
                 //cameraLookAt = Vector3.Transform(cameraLookAt, Matrix.CreateFromAxisAngle(right, MathHelper.ToRadians(-0.3f))) ;
+
+                //primitive, cause all others don't work
+                cameraLookAt -= Vector3.Up;
             }
             else
             {
@@ -181,8 +187,6 @@ namespace Graphics3D
             #region move around
             if (newState.IsKeyDown(Keys.W))
             {
-                //cameraPosition += Vector3.Up / 2;
-                //cameraLookAt += Vector3.Up / 2;
                 Vector3 up = cameraUpVector;
                 up.Normalize();
 
@@ -191,8 +195,6 @@ namespace Graphics3D
             }
             if (newState.IsKeyDown(Keys.S))
             {
-                //cameraPosition -= Vector3.Up / 2;
-                //cameraLookAt -= Vector3.Up / 2;
                 Vector3 up = cameraUpVector;
                 up.Normalize();
 
@@ -226,29 +228,6 @@ namespace Graphics3D
             }
             #endregion
 
-
-            Vector3 direction = ForwardVector;
-            direction.Normalize();
-
-            Vector3 normal = Vector3.Cross(direction, cameraUpVector);
-
-            //You don't have to have the button pressed for an FPS obviously)`
-            if (currentMouseState.RightButton == ButtonState.Pressed)
-            {
-                float y = currentMouseState.Y - previousMouseState.Y;
-                //float x = currentMouseState.X - previousMouseState.X;
-
-                // y *= GameSettings.g_ScreenHeight / 800.0f;
-                // x *= GameSettings.g_ScreenWidth / 1280.0f;
-
-                var forward = ForwardVector;
-
-                //forward += x * 0.01f * normal;
-                forward -= y * 0.01f * cameraUpVector;
-                forward.Normalize();
-
-                cameraLookAt = Position + forward;
-            }
         }
     }
 }
