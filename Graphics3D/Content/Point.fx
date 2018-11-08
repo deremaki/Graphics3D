@@ -7,7 +7,7 @@ float3 CameraPosition;
 float3 SunLightDirection;
 float4 SunLightColor;
 float SunLightIntensity;
-S
+
 #define MAXLIGHT 20
 
 float3 PointLightPosition[MAXLIGHT];
