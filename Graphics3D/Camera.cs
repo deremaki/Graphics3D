@@ -220,11 +220,11 @@ namespace Graphics3D
             #region rotate clock
             if (newState.IsKeyDown(Keys.Q))
             {
-                cameraRotation = Vector3.Transform(cameraRotation, Matrix.CreateFromAxisAngle(ForwardVector, MathHelper.ToRadians(-0.01f)));
+                cameraUpVector = Vector3.Transform(cameraUpVector, Matrix.CreateFromAxisAngle(ForwardVector, MathHelper.ToRadians(-0.01f)));
             }
             if (newState.IsKeyDown(Keys.E))
             {
-                cameraRotation = Vector3.Transform(cameraRotation, Matrix.CreateFromAxisAngle(ForwardVector, MathHelper.ToRadians(0.01f)));
+                cameraUpVector = Vector3.Transform(cameraUpVector, Matrix.CreateFromAxisAngle(ForwardVector, MathHelper.ToRadians(0.01f)));
             }
             #endregion
 
