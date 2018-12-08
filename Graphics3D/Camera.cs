@@ -8,13 +8,9 @@ namespace Graphics3D
     class Camera
     {
         private Vector3 cameraPosition;
-        private Vector3 cameraRotation;
         private Vector3 cameraLookAt;
         private Vector3 cameraUpVector;
 
-        private float angleX = 0;
-        private float angleY = 0;
-        private float angleZ = 0;
 
         private GraphicsDevice _graphicsDevice;
 
@@ -45,11 +41,6 @@ namespace Graphics3D
             get { return Vector3.Cross(ForwardVector, cameraUpVector); }
         }
 
-        public Vector3 Rotation
-        {
-            get { return cameraRotation; }
-        }
-
         public Vector3 LookAt
         {
             get { return cameraLookAt; }
@@ -59,14 +50,6 @@ namespace Graphics3D
         {
             get
             {
-                cameraLookAt = Vector3.Transform(ForwardVector, Matrix.CreateFromAxisAngle(cameraUpVector, angleX));
-
-                cameraLookAt = Vector3.Transform(ForwardVector, Matrix.CreateFromAxisAngle(HorizontalVector, angleY));
-                //cameraLookAt -= cameraPosition;
-
-                //cameraUpVector = Vector3.Transform(cameraUpVector, Matrix.CreateFromAxisAngle(Vector3.Cross(cameraUpVector, cameraLookAt), angleY));
-
-
                 return Matrix.CreateLookAt(cameraPosition, cameraLookAt, cameraUpVector);
             }
         }
@@ -92,17 +75,6 @@ namespace Graphics3D
                 cameraPosition = new Vector3(0.0f, 0.0f, 200.0f);
                 cameraLookAt = Vector3.Zero;
                 cameraUpVector = Vector3.Up;
-                angleX = 0;
-                angleY = 0;
-                angleZ = 0;
-            }
-            if (newState.IsKeyDown(Keys.C))
-            {
-                cameraLookAt = Vector3.Zero;
-            }
-            if (newState.IsKeyDown(Keys.U))
-            {
-                cameraUpVector = Vector3.Up;
             }
             #endregion
 
@@ -110,61 +82,23 @@ namespace Graphics3D
 
             if (newState.IsKeyDown(Keys.Up))
             {
-                //cameraLookAt = Vector3.Transform(cameraLookAt, Matrix.CreateFromAxisAngle(HorizontalVector, MathHelper.ToRadians(0.1f)));
-                //cameraUpVector = Vector3.Cross(HorizontalVector, ForwardVector);
-
-                //var vec = ForwardVector;
-                //var vecSpher = CoordsHelper.CartesianToSpherical(vec);
-                //vecSpher.Theta += MathHelper.ToRadians(0.5f);
-                //var vecCart = CoordsHelper.SphericalToCartesian(vecSpher);
-                //cameraLookAt = vecCart + cameraPosition;
-
-                //angleY = MathHelper.ToRadians(0.5f);
-                //cameraUpVector = Vector3.Transform(cameraUpVector, Matrix.CreateFromAxisAngle(HorizontalVector, angleY));
-
-                //Vector3 axis = cameraPosition - cameraLookAt;
-                //Vector3 axisUp = new Vector3(axis.X, -axis.Y, axis.Z);
-                //Vector3 right = Vector3.Cross(axis, axisUp);
-                //cameraLookAt = Vector3.Transform(cameraLookAt, Matrix.CreateFromAxisAngle(right, MathHelper.ToRadians(0.3f)));
-
-                //primitive, cause all others don't work
-                cameraLookAt += Vector3.Up;
+                cameraLookAt = Vector3.Transform(ForwardVector, Matrix.CreateFromAxisAngle(HorizontalVector, -MathHelper.ToRadians(0.007f)));
+                cameraUpVector = Vector3.Transform(cameraUpVector, Matrix.CreateFromAxisAngle(HorizontalVector, -MathHelper.ToRadians(0.007f)));
             }
 
             else if (newState.IsKeyDown(Keys.Down))
             {
-                //var vec = cameraLookAt - cameraPosition;
-                //var vecSpher = CoordsHelper.CartesianToSpherical(vec);
-                //vecSpher.Theta -= MathHelper.ToRadians(0.5f);
-                //var vecCart = CoordsHelper.SphericalToCartesian(vecSpher);
-                //cameraLookAt = vecCart + cameraPosition;
-
-                //angleY = MathHelper.ToRadians(-0.5f);
-                //cameraUpVector = Vector3.Transform(cameraUpVector, Matrix.CreateFromAxisAngle(HorizontalVector, angleY));
-
-                //Vector3 axis = cameraPosition - cameraLookAt;
-                //Vector3 axisUp = new Vector3(axis.X, -axis.Y, axis.Z);
-                //Vector3 right = Vector3.Cross(axis, axisUp);
-                //cameraLookAt = Vector3.Transform(cameraLookAt, Matrix.CreateFromAxisAngle(right, MathHelper.ToRadians(-0.3f))) ;
-
-                //primitive, cause all others don't work
-                cameraLookAt -= Vector3.Up;
+                cameraLookAt = Vector3.Transform(ForwardVector, Matrix.CreateFromAxisAngle(HorizontalVector, MathHelper.ToRadians(0.007f)));
+                cameraUpVector = Vector3.Transform(cameraUpVector, Matrix.CreateFromAxisAngle(HorizontalVector, MathHelper.ToRadians(0.007f)));
             }
-            else
-            {
-                angleY = 0.0f;
-            }
+
             if (newState.IsKeyDown(Keys.Left))
             {
-                angleX = MathHelper.ToRadians(0.5f);
+                cameraLookAt = Vector3.Transform(ForwardVector, Matrix.CreateFromAxisAngle(cameraUpVector, MathHelper.ToRadians(0.7f)));
             }
             else if (newState.IsKeyDown(Keys.Right))
             {
-                angleX = MathHelper.ToRadians(-0.5f);
-            }
-            else
-            {
-                angleX = 0.0f;
+                cameraLookAt = Vector3.Transform(ForwardVector, Matrix.CreateFromAxisAngle(cameraUpVector, -MathHelper.ToRadians(0.7f)));
             }
             #endregion
 
