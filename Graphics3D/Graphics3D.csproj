@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Camera.cs" />
     <Compile Include="CoordsHelper.cs" />
+    <Compile Include="DrawHelper.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

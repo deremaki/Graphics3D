@@ -20,6 +20,10 @@ namespace Graphics3D
 
         bool shaders = true;
 
+        TimeSpan timeToSwitch = new TimeSpan(0, 0, 1);
+        TimeSpan previousTimeToSwitch;
+        int colorSwitch = 0;
+
         Camera camera;
 
         Matrix projection;
@@ -62,8 +66,6 @@ namespace Graphics3D
             projection = camera.Projection;
             world = Matrix.CreateTranslation(0.0f, 0.0f, 0.0f);
 
-            phong = Content.Load<Effect>("Phong");
-            point = Content.Load<Effect>("Point");
             shader = Content.Load<Effect>("Shader");
 
             ship = Content.Load<Model>("Copy_of_evac_ship_9");
@@ -90,7 +92,10 @@ namespace Graphics3D
         protected override void Update(GameTime gameTime)
         {
             if (previousTime == null)
+            {
                 previousTime = gameTime.TotalGameTime;
+                previousTimeToSwitch = gameTime.TotalGameTime;
+            }
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
@@ -99,6 +104,12 @@ namespace Graphics3D
             {
                 previousTime = gameTime.TotalGameTime;
                 camera.Update();
+            }
+
+            if (TimeSpan.Compare(gameTime.TotalGameTime - previousTimeToSwitch, timeToSwitch) == 1)
+            {
+                previousTimeToSwitch = gameTime.TotalGameTime;
+                colorSwitch = (colorSwitch + 1) % 2;
             }
 
             base.Update(gameTime);
@@ -119,19 +130,26 @@ namespace Graphics3D
             }
             else
             {
-                planet.DrawShader(shader, camera.Position, GraphicsDevice, world, view, projection, Color.Silver);
-                moonbase1.DrawShader(shader, camera.Position, GraphicsDevice, world, view, projection, Color.MonoGameOrange);
-                moonbase2.DrawShader(shader, camera.Position, GraphicsDevice, world, view, projection, Color.MonoGameOrange);
-                moonbase3.DrawShader(shader, camera.Position, GraphicsDevice, world, view, projection, Color.MonoGameOrange);
+                planet.DrawShader(shader, camera.Position, GraphicsDevice, world, view, projection, Color.Silver, colorSwitch);
+                moonbase1.DrawShader(shader, camera.Position, GraphicsDevice, world, view, projection, Color.MonoGameOrange, colorSwitch);
+                moonbase2.DrawShader(shader, camera.Position, GraphicsDevice, world, view, projection, Color.MonoGameOrange, colorSwitch);
+                moonbase3.DrawShader(shader, camera.Position, GraphicsDevice, world, view, projection, Color.MonoGameOrange, colorSwitch);
             }
 
             DrawModel(tree, world, view, projection, new Vector3(10.0f, 15.0f, 48.0f), Color.ForestGreen, 90.0f, 0.0f, 1.0f);
             DrawModel(tree, world, view, projection, new Vector3(20.0f, 10.0f, 45.0f), Color.DarkOliveGreen, 90.0f, 0.0f, 1.0f);
             DrawModel(tree, world, view, projection, new Vector3(20.0f, 20.0f, 40.0f), Color.MediumSeaGreen, 90.0f, 0.0f, 1.0f);
 
-            DrawModel(bulb, world, view, projection, new Vector3(-20.0f, -15.0f, 60.0f), Color.Red, 90.0f, 0.0f, 3.0f);
-            DrawModel(bulb, world, view, projection, new Vector3(20.0f, -15.0f, 60.0f), Color.Blue, 90.0f, 0.0f, 3.0f);
-
+            if (colorSwitch == 0)
+            {
+                DrawModel(bulb, world, view, projection, new Vector3(-20.0f, -15.0f, 60.0f), Color.Red, 90.0f, 0.0f, 3.0f);
+                DrawModel(bulb, world, view, projection, new Vector3(20.0f, -15.0f, 60.0f), Color.Blue, 90.0f, 0.0f, 3.0f);
+            }
+            else {
+                DrawModel(bulb, world, view, projection, new Vector3(-20.0f, -15.0f, 60.0f), Color.Blue, 90.0f, 0.0f, 3.0f);
+                DrawModel(bulb, world, view, projection, new Vector3(20.0f, -15.0f, 60.0f), Color.Red, 90.0f, 0.0f, 3.0f);
+            }
+            
             DrawModel(ship, world, view, projection, new Vector3(0.0f, 35.0f, 35.0f), Color.IndianRed, 40.0f, 0.0f, 0.01f);
 
             base.Draw(gameTime);
@@ -155,124 +173,17 @@ namespace Graphics3D
 
                 if (shaders)
                 {
-                    //DrawWithPointShader(mesh, world, view, projection, color);
-                    //DrawWithPhongShader(mesh, world, view, projection, color, viewVector);
-                    DrawWithShader(mesh, world, view, projection, color);
+                    //DrawHelper.DrawWithPointShader(mesh, world, view, projection, color);
+                    //DrawHelper.DrawWithPhongShader(mesh, world, view, projection, color, viewVector);
+                    DrawHelper.DrawWithShader(mesh, shader, camera.Position, world, view, projection, color, colorSwitch);
                 }
                 else
                 {
-                    DrawAsBasicEffect(mesh, world, view, projection, color);
+                    DrawHelper.DrawAsBasicEffect(mesh, world, view, projection, color);
                 }
             }
         }
 
-        private void DrawWithPointShader(ModelMesh mesh, Matrix world, Matrix view, Matrix projection, Color color)
-        {
-            foreach (ModelMeshPart part in mesh.MeshParts)
-            {
-                part.Effect = point;
-                point.Parameters["World"].SetValue(world);
-                point.Parameters["WorldViewProj"].SetValue(world * view * projection);
 
-                point.Parameters["CameraPosition"].SetValue(camera.Position);
-                point.Parameters["SunLightDirection"].SetValue(new Vector3(0.0f, 1000.0f, 1000.0f));
-                point.Parameters["SunLightColor"].SetValue(Color.White.ToVector4());
-                point.Parameters["SunLightIntensity"].SetValue(100.0f);
-
-                point.Parameters["PointLightPosition"].SetValue(new Vector3[] {
-                    new Vector3(-20.0f, -15.0f, 60.0f),
-                    new Vector3(20.0f, -15.0f, 60.0f)
-                });
-
-                point.Parameters["PointLightColor"].SetValue(new Vector4[] {
-                    Color.Red.ToVector4(),
-                    Color.Blue.ToVector4()
-                });
-
-                point.Parameters["PointLightPosition"].SetValue(new Vector3[] {
-                    new Vector3(-20.0f, -15.0f, 60.0f),
-                    new Vector3(20.0f, -15.0f, 60.0f)
-                });
-
-                point.Parameters["PointLightIntensity"].SetValue(new float[] {
-                    3000.0f,
-                    3000.0f
-                });
-
-                point.Parameters["PointLightRadius"].SetValue(new float[] {
-                    10.0f,
-                    10.0f
-                });
-
-                point.Parameters["MaxLightsRendered"].SetValue(2);
-            }
-            mesh.Draw();
-        }
-
-        private void DrawWithPhongShader(ModelMesh mesh, Matrix world, Matrix view, Matrix projection, Color color, Vector3 viewVector)
-        {
-            foreach (ModelMeshPart part in mesh.MeshParts)
-            {
-                part.Effect = phong;
-                phong.Parameters["World"].SetValue(world);
-                phong.Parameters["View"].SetValue(view);
-                phong.Parameters["Projection"].SetValue(projection);
-                phong.Parameters["WorldInverseTranspose"].SetValue(Matrix.Transpose(Matrix.Invert(world)));
-
-                phong.Parameters["ViewVector"].SetValue(viewVector);
-                phong.Parameters["phongblinn"].SetValue(0);
-                phong.Parameters["textures"].SetValue(1);
-
-                phong.Parameters["DiffuseIntensity"].SetValue((float)0.9);
-                phong.Parameters["Shininess"].SetValue(100.0f);
-                phong.Parameters["ModelTexture"].SetValue(mesh.Tag as Texture2D);
-            }
-            mesh.Draw();
-        }
-
-        private void DrawWithShader(ModelMesh mesh, Matrix world, Matrix view, Matrix projection, Color color)
-        {
-            foreach (ModelMeshPart part in mesh.MeshParts)
-            {
-                part.Effect = shader;
-                shader.Parameters["World"].SetValue(world);
-                shader.Parameters["View"].SetValue(view);
-                shader.Parameters["Projection"].SetValue(projection);
-
-                shader.Parameters["MaterialColor"].SetValue(color.ToVector4());
-
-                shader.Parameters["LightDirection"].SetValue(new Vector3(0.0f, 1000.0f, 1000.0f));
-                shader.Parameters["LightPositions"].SetValue(new Vector3[2] {
-                    new Vector3(-20.0f, -15.0f, 60.0f),
-                    new Vector3(20.0f, -15.0f, 60.0f)
-                });
-                shader.Parameters["LightDirections"].SetValue(new Vector3[2] {
-                    new Vector3 (0.0f, 0.0f, 0.0f) - new Vector3(-20.0f, -15.0f, 60.0f),
-                    new Vector3 (0.0f, 0.0f, 0.0f) - new Vector3(20.0f, -15.0f, 60.0f)
-                });
-                shader.Parameters["LightColors"].SetValue(new Vector4[2] {
-                    Color.Red.ToVector4(),
-                    Color.Blue.ToVector4()
-                });
-                shader.Parameters["CameraPosition"].SetValue(camera.Position);
-
-            }
-            mesh.Draw();
-        }
-
-
-        private void DrawAsBasicEffect(ModelMesh mesh, Matrix world, Matrix view, Matrix projection, Color color)
-        {
-            foreach (BasicEffect effect in mesh.Effects)
-            {
-                effect.EnableDefaultLighting();
-                effect.World = world;
-                effect.View = view;
-                effect.Projection = projection;
-                effect.AmbientLightColor = new Vector3(0.01f, 0.01f, 0.01f);
-                effect.DiffuseColor = color.ToVector3();
-            }
-            mesh.Draw();
-        }
     }
 }

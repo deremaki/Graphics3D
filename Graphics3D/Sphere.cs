@@ -139,7 +139,7 @@ namespace Graphics3D
             }
         }
 
-        public void DrawShader(Effect effect, Vector3 cameraPosition, GraphicsDevice graphicsDevice, Matrix world, Matrix view, Matrix projection, Color color)
+        public void DrawShader(Effect effect, Vector3 cameraPosition, GraphicsDevice graphicsDevice, Matrix world, Matrix view, Matrix projection, Color color, int colorSwitch)
         {
             graphicsDevice.SetVertexBuffer(this.vertexBuffer);
             graphicsDevice.Indices = this.indexBuffer;
@@ -155,14 +155,26 @@ namespace Graphics3D
                     new Vector3(-20.0f, -15.0f, 60.0f),
                     new Vector3(20.0f, -15.0f, 60.0f)
                 });
-            effect.Parameters["LightDirections"].SetValue(new Vector3[2] {
-                    new Vector3 (0.0f, 0.0f, 0.0f) - new Vector3(-20.0f, -15.0f, 60.0f),
-                    new Vector3 (0.0f, 0.0f, 0.0f) - new Vector3(20.0f, -15.0f, 60.0f)
-                });
-            effect.Parameters["LightColors"].SetValue(new Vector4[2] {
+            if (colorSwitch == 0)
+            {
+                effect.Parameters["LightColors"].SetValue(new Vector4[2] {
                     Color.Red.ToVector4(),
                     Color.Blue.ToVector4()
                 });
+            }
+            else
+            {
+                effect.Parameters["LightColors"].SetValue(new Vector4[2] {
+                    Color.Blue.ToVector4(),
+                    Color.Red.ToVector4()
+                });
+            }
+            effect.Parameters["LightDirections"].SetValue(new Vector3[2] {
+                    //lookAt - location
+                    new Vector3 (0.0f, 0.0f, 50.0f) - new Vector3(-20.0f, -15.0f, 60.0f),
+                    new Vector3 (0.0f, 0.0f, 50.0f) - new Vector3(20.0f, -15.0f, 60.0f)
+                });
+            
             effect.Parameters["CameraPosition"].SetValue(cameraPosition);
 
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
