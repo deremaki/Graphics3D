@@ -60,6 +60,7 @@
     <Content Include="Content\Gourand.fx" />
     <Content Include="Content\Phong.fx" />
     <Content Include="Content\Point.fx" />
+    <Content Include="Content\Shader.fx" />
     <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>

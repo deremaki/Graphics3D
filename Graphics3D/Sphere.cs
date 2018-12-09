@@ -91,18 +91,16 @@ namespace Graphics3D
 
         public void Initialize(GraphicsDevice graphicsDevice)
         {
-            //vertexBuffer = new VertexBuffer(graphicsDevice, typeof(VertexPositionColor), vertices.Count, BufferUsage.WriteOnly);
-            //vertexBuffer.SetData(vertices.ToArray());
             vertexBuffer = new VertexBuffer(graphicsDevice, typeof(VertexPositionNormal), verticesNormals.Count, BufferUsage.WriteOnly);
             vertexBuffer.SetData(verticesNormals.ToArray());
 
             indexBuffer = new IndexBuffer(graphicsDevice, typeof(ushort), indices.Count, BufferUsage.WriteOnly);
             indexBuffer.SetData(indices.ToArray());
 
-            basicEffect = new BasicEffect(graphicsDevice);
+            //basicEffect = new BasicEffect(graphicsDevice);
 
-            basicEffect.EnableDefaultLighting();
-            basicEffect.PreferPerPixelLighting = false;
+            //basicEffect.EnableDefaultLighting();
+            //basicEffect.PreferPerPixelLighting = false;
         }
 
         public void MoveSphere(Vector3 vectorToMove)
@@ -123,14 +121,11 @@ namespace Graphics3D
 
         public void Draw(GraphicsDevice graphicsDevice, Matrix world, Matrix view, Matrix projection, Color color)
         {
-            //I did not managed to draw this using shaders
-
             this.basicEffect.World = world;
             this.basicEffect.View = view;
             this.basicEffect.Projection = projection;
             this.basicEffect.AmbientLightColor = new Vector3(0.01f, 0.01f, 0.01f);
             this.basicEffect.DiffuseColor = color.ToVector3();
-            //planet.basicEffect.EmissiveColor = new Vector3(0.9f, 0.9f, 0.9f);
 
             graphicsDevice.SetVertexBuffer(this.vertexBuffer);
             graphicsDevice.Indices = this.indexBuffer;
@@ -138,11 +133,47 @@ namespace Graphics3D
             foreach (EffectPass pass in this.basicEffect.CurrentTechnique.Passes)
             {
                 pass.Apply();
+
+                int primitiveCount = this.indices.Count / 3;
+                graphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, this.vertices.Count, 0, primitiveCount);
+            }
+        }
+
+        public void DrawShader(Effect effect, Vector3 cameraPosition, GraphicsDevice graphicsDevice, Matrix world, Matrix view, Matrix projection, Color color)
+        {
+            graphicsDevice.SetVertexBuffer(this.vertexBuffer);
+            graphicsDevice.Indices = this.indexBuffer;
+
+            effect.Parameters["World"].SetValue(world);
+            effect.Parameters["View"].SetValue(view);
+            effect.Parameters["Projection"].SetValue(projection);
+
+            effect.Parameters["MaterialColor"].SetValue(color.ToVector4());
+
+            effect.Parameters["LightDirection"].SetValue(new Vector3(0.0f, 1.0f, 1.0f));
+            effect.Parameters["LightPositions"].SetValue(new Vector3[2] {
+                    new Vector3(-20.0f, -15.0f, 60.0f),
+                    new Vector3(20.0f, -15.0f, 60.0f)
+                });
+            effect.Parameters["LightDirections"].SetValue(new Vector3[2] {
+                    new Vector3 (0.0f, 0.0f, 0.0f) - new Vector3(-20.0f, -15.0f, 60.0f),
+                    new Vector3 (0.0f, 0.0f, 0.0f) - new Vector3(20.0f, -15.0f, 60.0f)
+                });
+            effect.Parameters["LightColors"].SetValue(new Vector4[2] {
+                    Color.Red.ToVector4(),
+                    Color.Blue.ToVector4()
+                });
+            effect.Parameters["CameraPosition"].SetValue(cameraPosition);
+
+            foreach (EffectPass pass in effect.CurrentTechnique.Passes)
+            {
+                pass.Apply();
                 int primitiveCount = this.indices.Count / 3;
                 graphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, this.vertices.Count, 0, primitiveCount);
             }
         }
     }
+
 
     public struct VertexPositionNormal : IVertexType
     {
