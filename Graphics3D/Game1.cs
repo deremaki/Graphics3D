@@ -13,10 +13,9 @@ namespace Graphics3D
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        KeyboardState oldState;
         TimeSpan previousTime;
 
-        Effect phong, point, shader;
+        Effect shader;
 
         bool shaders = true;
 
@@ -29,6 +28,8 @@ namespace Graphics3D
         Matrix projection;
         Matrix view;
         Matrix world;
+
+        Skybox skybox;
 
         //models
         Model bulb;
@@ -66,11 +67,13 @@ namespace Graphics3D
             projection = camera.Projection;
             world = Matrix.CreateTranslation(0.0f, 0.0f, 0.0f);
 
-            shader = Content.Load<Effect>("Shader");
+            skybox = new Skybox("Skybox/EmptySpace", Content);
 
-            ship = Content.Load<Model>("Copy_of_evac_ship_9");
-            tree = Content.Load<Model>("tree");
-            bulb = Content.Load<Model>("Lightbulb");
+            shader = Content.Load<Effect>("Shaders/Shader");
+
+            ship = Content.Load<Model>("Models/Copy_of_evac_ship_9");
+            tree = Content.Load<Model>("Models/tree");
+            bulb = Content.Load<Model>("Models/Lightbulb");
 
             planet = new Sphere(100, 64);
             moonbase1 = new Sphere(14, 6);
@@ -120,6 +123,10 @@ namespace Graphics3D
             GraphicsDevice.Clear(Color.Black);
 
             view = camera.View;
+
+            GraphicsDevice.RasterizerState = RasterizerState.CullClockwise;
+            skybox.Draw(view, projection, camera.Position);
+            GraphicsDevice.RasterizerState = RasterizerState.CullCounterClockwise;
 
             if (!shaders)
             {
