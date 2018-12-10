@@ -12,6 +12,9 @@ namespace Graphics3D
         private Vector3 cameraUpVector;
 
 
+        float angleX;
+        float angleY;
+
         private GraphicsDevice _graphicsDevice;
 
         private MouseState currentMouseState, previousMouseState;
@@ -50,6 +53,28 @@ namespace Graphics3D
         {
             get
             {
+                if (angleX != 0.0f)
+                {
+                    cameraLookAt = Vector3.Transform(ForwardVector, Matrix.CreateFromAxisAngle(HorizontalVector, angleX));
+                    cameraUpVector = Vector3.Transform(cameraUpVector, Matrix.CreateFromAxisAngle(HorizontalVector, angleX));
+
+                    cameraLookAt = Vector3.Transform(ForwardVector, Matrix.CreateFromAxisAngle(cameraUpVector, angleY));
+                }
+
+                if (angleY != 0.0f)
+                {
+                    cameraLookAt = Vector3.Transform(ForwardVector, Matrix.CreateFromAxisAngle(cameraUpVector, angleY));
+
+                    cameraLookAt = Vector3.Transform(ForwardVector, Matrix.CreateFromAxisAngle(HorizontalVector, angleX));
+                    cameraUpVector = Vector3.Transform(cameraUpVector, Matrix.CreateFromAxisAngle(HorizontalVector, angleX));
+
+                    
+                }
+
+
+                //cameraUpVector = Vector3.Transform(cameraUpVector, Matrix.CreateFromAxisAngle(Vector3.Cross(cameraUpVector, cameraLookAt), angleX));
+
+
                 return Matrix.CreateLookAt(cameraPosition, cameraLookAt, cameraUpVector);
             }
         }
@@ -82,23 +107,29 @@ namespace Graphics3D
 
             if (newState.IsKeyDown(Keys.Up))
             {
-                cameraLookAt = Vector3.Transform(ForwardVector, Matrix.CreateFromAxisAngle(HorizontalVector, -MathHelper.ToRadians(0.007f)));
-                cameraUpVector = Vector3.Transform(cameraUpVector, Matrix.CreateFromAxisAngle(HorizontalVector, -MathHelper.ToRadians(0.007f)));
+                angleX = MathHelper.ToRadians(-0.007f);
             }
 
             else if (newState.IsKeyDown(Keys.Down))
             {
-                cameraLookAt = Vector3.Transform(ForwardVector, Matrix.CreateFromAxisAngle(HorizontalVector, MathHelper.ToRadians(0.007f)));
-                cameraUpVector = Vector3.Transform(cameraUpVector, Matrix.CreateFromAxisAngle(HorizontalVector, MathHelper.ToRadians(0.007f)));
+                angleX = MathHelper.ToRadians(0.007f);
+            }
+            else
+            {
+                angleX = 0.0f;
             }
 
             if (newState.IsKeyDown(Keys.Left))
             {
-                cameraLookAt = Vector3.Transform(ForwardVector, Matrix.CreateFromAxisAngle(cameraUpVector, MathHelper.ToRadians(0.7f)));
+                angleY = MathHelper.ToRadians(2.0f);
             }
             else if (newState.IsKeyDown(Keys.Right))
             {
-                cameraLookAt = Vector3.Transform(ForwardVector, Matrix.CreateFromAxisAngle(cameraUpVector, -MathHelper.ToRadians(0.7f)));
+                angleY = MathHelper.ToRadians(-2.0f);
+            }
+            else
+            {
+                angleY = 0.0f;
             }
             #endregion
 
