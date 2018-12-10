@@ -20,7 +20,8 @@ namespace Graphics3D
         public Skybox(ContentManager Content)
         {
             skyBox = Content.Load<Model>("Skybox/cube");
-            skyBoxTexture = Content.Load<TextureCube>("Skybox/EmptySpace");
+            //skyBoxTexture = Content.Load<TextureCube>("Skybox/EmptySpace");
+            skyBoxTexture = Content.Load<TextureCube>("Skybox/my_sky");
             skyBoxEffect = Content.Load<Effect>("Skybox/Skybox");
         }
 

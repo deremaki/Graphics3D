@@ -70,6 +70,7 @@
     <Content Include="Content\Shaders\Reflection.fx" />
     <Content Include="Content\Shaders\Shader.fx" />
     <Content Include="Content\Skybox\EmptySpace.dds" />
+    <Content Include="Content\Skybox\my_sky.dds" />
     <Content Include="Content\Skybox\Skybox.fx" />
     <Content Include="Icon.ico" />
   </ItemGroup>

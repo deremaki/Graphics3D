@@ -20,7 +20,8 @@ namespace Graphics3D
         public Reflection(ContentManager Content)
         {
             sphere = Content.Load<Model>("Models/UntexturedSphere");
-            skyBoxTexture = Content.Load<TextureCube>("Skybox/EmptySpace");
+            //skyBoxTexture = Content.Load<TextureCube>("Skybox/EmptySpace");
+            skyBoxTexture = Content.Load<TextureCube>("Skybox/my_sky");
             reflection = Content.Load<Effect>("Shaders/Reflection");
         }
 
