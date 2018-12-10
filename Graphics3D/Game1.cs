@@ -30,11 +30,13 @@ namespace Graphics3D
         Matrix world;
 
         Skybox skybox;
+        Reflection reflection;
 
         //models
         Model bulb;
         Model tree;
         Model ship;
+        Model sphere;
 
         //primitives
         Sphere planet, moonbase1, moonbase2, moonbase3;
@@ -67,13 +69,15 @@ namespace Graphics3D
             projection = camera.Projection;
             world = Matrix.CreateTranslation(0.0f, 0.0f, 0.0f);
 
-            skybox = new Skybox("Skybox/EmptySpace", Content);
+            skybox = new Skybox(Content);
+            reflection = new Reflection(Content);
 
             shader = Content.Load<Effect>("Shaders/Shader");
 
             ship = Content.Load<Model>("Models/Copy_of_evac_ship_9");
             tree = Content.Load<Model>("Models/tree");
             bulb = Content.Load<Model>("Models/Lightbulb");
+            sphere = Content.Load<Model>("Models/UntexturedSphere");
 
             planet = new Sphere(100, 64);
             moonbase1 = new Sphere(14, 6);
@@ -127,6 +131,8 @@ namespace Graphics3D
             GraphicsDevice.RasterizerState = RasterizerState.CullClockwise;
             skybox.Draw(view, projection, camera.Position);
             GraphicsDevice.RasterizerState = RasterizerState.CullCounterClockwise;
+
+            reflection.DrawModelWithEffect(sphere, world, view, projection, camera.Position, 5.0f, new Vector3(40.0f, 45.0f, 48.0f));
 
             if (!shaders)
             {

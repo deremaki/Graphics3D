@@ -17,7 +17,7 @@ namespace Graphics3D
 
         private float size = 200.0f;
 
-        public Skybox(string skyboxTexture, ContentManager Content)
+        public Skybox(ContentManager Content)
         {
             skyBox = Content.Load<Model>("Skybox/cube");
             skyBoxTexture = Content.Load<TextureCube>("Skybox/EmptySpace");
