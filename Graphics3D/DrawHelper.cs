@@ -129,7 +129,6 @@ namespace Graphics3D
 
                 shader.Parameters["ModelTexture"].SetValue(texture);
 
-
                 shader.Parameters["AmbientColor"].SetValue(Color.White.ToVector4());
                 shader.Parameters["AmbientIntensity"].SetValue(0.1f);
                 shader.Parameters["DiffuseLightDirection"].SetValue(new Vector3(0.0f, 1000.0f, 1000.0f));

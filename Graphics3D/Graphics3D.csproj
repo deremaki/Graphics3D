@@ -42,6 +42,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Camera.cs" />
+    <Content Include="Content\Models\textures\BeachBallTexture.png" />
+    <Content Include="Content\Models\textures\brushed_metal.png" />
+    <Content Include="Content\Models\textures\dark_metal.png" />
+    <Content Include="Content\Models\textures\floor_metal.png" />
+    <Content Include="Content\Models\textures\red_metal.png" />
+    <Content Include="Content\Models\textures\wagon4.png" />
+    <Content Include="Content\Models\textures\wagon5.png" />
+    <Content Include="Content\Models\textures\wagon6.png" />
+    <Content Include="Content\Models\textures\wood.png" />
     <Content Include="Content\Shaders\ShaderTextures.fx" />
     <Content Include="Content\Shaders\Textured.fx" />
     <Compile Include="CoordsHelper.cs" />
@@ -83,7 +92,11 @@
     <None Include="Content\Models\Fridge.FBX" />
     <None Include="Content\Models\Helicopter.fbx" />
     <None Include="Content\Models\Lightbulb.fbx" />
+    <None Include="Content\Models\train.fbx" />
     <None Include="Content\Models\tree.fbx" />
+    <None Include="Content\Models\wagon1.fbx" />
+    <None Include="Content\Models\wagon2.fbx" />
+    <None Include="Content\Models\wagon3.fbx" />
     <None Include="Content\Skybox\cube.fbx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

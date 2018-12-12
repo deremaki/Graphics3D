@@ -168,14 +168,14 @@ namespace Graphics3D
             }
             if (newState.IsKeyDown(Keys.A))
             {
-                Vector3 right = Vector3.Cross(ForwardVector, cameraUpVector);
+                Vector3 right = HorizontalVector;
                 right.Normalize();
                 cameraPosition += right;
                 cameraLookAt += right;
             }
             if (newState.IsKeyDown(Keys.D))
             {
-                Vector3 right = Vector3.Cross(ForwardVector, cameraUpVector);
+                Vector3 right = HorizontalVector;
                 right.Normalize();
                 cameraPosition -= right;
                 cameraLookAt -= right;

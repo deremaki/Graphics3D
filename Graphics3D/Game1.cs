@@ -38,8 +38,13 @@ namespace Graphics3D
         Model ship;
         Model sphere;
         Model helicopter;
+        Model locomotive, wagon1, wagon2, wagon3;
 
-        Texture2D heliTexture;
+        Vector3 trainPosition = new Vector3(-50.0f, 0.0f, 0.0f);
+        float trainRotationX = 0.0f;
+        float trainRotationY = 0.0f;
+
+        Texture2D heliTexture, shipTexture;
 
         //primitives
         Sphere planet, moonbase1, moonbase2, moonbase3;
@@ -85,8 +90,15 @@ namespace Graphics3D
             sphere = Content.Load<Model>("Models/UntexturedSphere");
             helicopter = Content.Load<Model>("Models/Helicopter");
 
+            locomotive = Content.Load<Model>("Models/train");
+
+            wagon1 = Content.Load<Model>("Models/wagon1");
+            wagon2 = Content.Load<Model>("Models/wagon2");
+            wagon3 = Content.Load<Model>("Models/wagon3");
+
             heliTexture = Content.Load<Texture2D>("Models/helicopterTexture");
-           // texture = Content.Load<Texture2D>("Models/helicopterTexture");
+            shipTexture = Content.Load<Texture2D>("Models/Copy_of_evac_ship_d");
+            // texture = Content.Load<Texture2D>("Models/helicopterTexture");
 
             planet = new Sphere(100, 64);
             moonbase1 = new Sphere(14, 6);
@@ -173,10 +185,12 @@ namespace Graphics3D
                 DrawModel(bulb, world, view, projection, new Vector3(20.0f, -15.0f, 60.0f), Color.Red, 90.0f, 0.0f, 0.0f, 3.0f);
             }
             
-            DrawModel(ship, world, view, projection, new Vector3(0.0f, 35.0f, 35.0f), Color.IndianRed, 40.0f, 0.0f, 0.0f, 0.01f);
+            DrawModelWithTexture(ship, world, view, projection, new Vector3(0.0f, 35.0f, 35.0f), Color.IndianRed, 40.0f, 0.0f, 0.0f, 0.01f, shipTexture);
 
             DrawModelWithTexture(helicopter, world, view, projection, new Vector3(-30.0f, 35.0f, 38.0f), Color.White, -40.0f, 180.0f, -10.0f, 3.5f, heliTexture);
 
+            //DrawModelWithTexture(locomotive, world, view, projection, trainPosition, Color.Gold, 90.0f, -90.0f, 0.0f, 0.03f, null);
+            
             base.Draw(gameTime);
         }
 
@@ -226,6 +240,11 @@ namespace Graphics3D
                         * Matrix.CreateRotationY(MathHelper.ToRadians(angleZ))
                         * Matrix.CreateScale(scale)
                         * Matrix.CreateTranslation(modelLocation);
+
+                if (texture == null)
+                {
+                    texture = ((BasicEffect)mesh.Effects[0]).Texture;
+                }
 
                 DrawHelper.DrawWithTextureShader(mesh, textured, camera.Position, world, view, projection, texture);
                 //DrawHelper.DrawWithShaderTextured(mesh, shadertextured, camera.Position, world, view, projection, color, colorSwitch, texture);
