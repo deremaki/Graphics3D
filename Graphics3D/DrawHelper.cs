@@ -55,19 +55,62 @@ namespace Graphics3D
                 if (colorSwitch == 0)
                 {
                     shader.Parameters["LightColors"].SetValue(new Vector4[2] {
-                    Color.Red.ToVector4(),
-                    Color.Blue.ToVector4()
-                });
+                        Color.Red.ToVector4(),
+                        Color.Blue.ToVector4()
+                    });
                 }
                 else
                 {
                     shader.Parameters["LightColors"].SetValue(new Vector4[2] {
-                    Color.Blue.ToVector4(),
-                    Color.Red.ToVector4()
-                });
+                        Color.Blue.ToVector4(),
+                        Color.Red.ToVector4()
+                    });
                 }
 
                 shader.Parameters["CameraPosition"].SetValue(cameraPosition);
+            }
+            mesh.Draw();
+        }
+
+        public static void DrawWithShaderTextured(ModelMesh mesh, Effect shader, Vector3 cameraPosition, Matrix world, Matrix view, Matrix projection, Color color, int colorSwitch, Texture2D texture)
+        {
+            foreach (ModelMeshPart part in mesh.MeshParts)
+            {
+                part.Effect = shader;
+                shader.Parameters["World"].SetValue(world);
+                shader.Parameters["View"].SetValue(view);
+                shader.Parameters["Projection"].SetValue(projection);
+
+                shader.Parameters["MaterialColor"].SetValue(color.ToVector4());
+
+                shader.Parameters["LightDirection"].SetValue(new Vector3(0.0f, 1000.0f, 1000.0f));
+                shader.Parameters["LightPositions"].SetValue(new Vector3[2] {
+                    new Vector3(-20.0f, -15.0f, 60.0f),
+                    new Vector3(20.0f, -15.0f, 60.0f)
+                });
+                shader.Parameters["LightDirections"].SetValue(new Vector3[2] {
+                    //lookAt - location
+                    new Vector3 (0.0f, 0.0f, 50.0f) - new Vector3(-20.0f, -15.0f, 60.0f),
+                    new Vector3 (0.0f, 0.0f, 50.0f) - new Vector3(20.0f, -15.0f, 60.0f)
+                });
+                if (colorSwitch == 0)
+                {
+                    shader.Parameters["LightColors"].SetValue(new Vector4[2] {
+                        Color.Red.ToVector4(),
+                        Color.Blue.ToVector4()
+                    });
+                }
+                else
+                {
+                    shader.Parameters["LightColors"].SetValue(new Vector4[2] {
+                        Color.Blue.ToVector4(),
+                        Color.Red.ToVector4()
+                    });
+                }
+
+                shader.Parameters["CameraPosition"].SetValue(cameraPosition);
+
+                shader.Parameters["ModelTexture"].SetValue(texture);
             }
             mesh.Draw();
         }

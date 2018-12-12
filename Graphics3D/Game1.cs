@@ -15,7 +15,7 @@ namespace Graphics3D
 
         TimeSpan previousTime;
 
-        Effect shader, textured;
+        Effect shader, textured, shadertextured;
 
         bool shaders = true;
 
@@ -77,6 +77,7 @@ namespace Graphics3D
 
             shader = Content.Load<Effect>("Shaders/Shader");
             textured = Content.Load<Effect>("Shaders/Textured");
+            shadertextured = Content.Load<Effect>("Shaders/ShaderTextures");
 
             ship = Content.Load<Model>("Models/Copy_of_evac_ship_9");
             tree = Content.Load<Model>("Models/tree");
@@ -133,6 +134,7 @@ namespace Graphics3D
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
+                      
 
             view = camera.View;
 
@@ -226,7 +228,7 @@ namespace Graphics3D
                         * Matrix.CreateTranslation(modelLocation);
 
                 DrawHelper.DrawWithTextureShader(mesh, textured, camera.Position, world, view, projection, texture);
-
+                //DrawHelper.DrawWithShaderTextured(mesh, shadertextured, camera.Position, world, view, projection, color, colorSwitch, texture);
             }
         }
     }

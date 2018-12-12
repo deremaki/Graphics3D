@@ -216,6 +216,12 @@
 /processorParam:DebugMode=Auto
 /build:Shaders/Shader.fx
 
+#begin Shaders/ShaderTextures.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/ShaderTextures.fx
+
 #begin Shaders/Textured.fx
 /importer:EffectImporter
 /processor:EffectProcessor
