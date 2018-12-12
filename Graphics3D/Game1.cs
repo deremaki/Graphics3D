@@ -173,7 +173,7 @@ namespace Graphics3D
             
             DrawModel(ship, world, view, projection, new Vector3(0.0f, 35.0f, 35.0f), Color.IndianRed, 40.0f, 0.0f, 0.0f, 0.01f);
 
-            DrawModelWithTexture(helicopter, world, view, projection, new Vector3(-30.0f, 35.0f, 38.0f), Color.White, 30.0f, 280.0f, 10.0f, 3.5f, heliTexture);
+            DrawModelWithTexture(helicopter, world, view, projection, new Vector3(-30.0f, 35.0f, 38.0f), Color.White, -40.0f, 180.0f, -10.0f, 3.5f, heliTexture);
 
             base.Draw(gameTime);
         }

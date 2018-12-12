@@ -94,7 +94,7 @@ namespace Graphics3D
                 shader.Parameters["DiffuseIntensity"].SetValue(1.0f);
                 shader.Parameters["Shininess"].SetValue(20.0f);
                 shader.Parameters["SpecularColor"].SetValue(Color.White.ToVector4());
-                shader.Parameters["SpecularIntensity"].SetValue(1.0f);
+                shader.Parameters["SpecularIntensity"].SetValue(0.8f);
             }
             mesh.Draw();
         }
