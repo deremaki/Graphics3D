@@ -25,6 +25,7 @@ float Ka = 0.06;
 //reflectors
 float P = 5;
 
+
 struct ColoredShaderInput
 {
 	float4 Position : SV_POSITION;
@@ -45,6 +46,7 @@ ColoredShaderOutput ColoredVS(in ColoredShaderInput input)
 
 	float4 worldPosition = mul(input.Position, World);
 	float4 viewPosition = mul(worldPosition, View);
+
 	output.Normal = normalize(mul(input.Normal, (float3x3)World));
 	output.Position = mul(viewPosition, Projection);
     output.WorldPosition = worldPosition.xyz;
@@ -68,6 +70,7 @@ float4 SpecPhong(float3 N, float3 L, float3 V, float distanceIntensity)
 
 float4 ColoredPS(ColoredShaderOutput input) : COLOR
 {
+
 	float3 N = normalize(input.Normal);
 	float3 V = normalize(CameraPosition - input.WorldPosition.xyz);
     float distanceIntensity = 1;
@@ -77,6 +80,8 @@ float4 ColoredPS(ColoredShaderOutput input) : COLOR
 	float4 diffuse = Diffuse(N, L, distanceIntensity) * input.Color;
 	float4 specular = SpecPhong(N, L, V, distanceIntensity);
 	resultIntensity += whiteColor * (diffuse + specular);
+
+	
 	//reflectors
 	for (int i = 0;i < 2;i++)
 	{
@@ -87,8 +92,12 @@ float4 ColoredPS(ColoredShaderOutput input) : COLOR
 		float4 att = 0;
 		float cos = dot(-normalize(LightDirections[i].xyz), L);
 		att = pow(saturate(cos), P);
+
 		resultIntensity += LightColors[i] * att * (diffuse + specular);
+
 	}
+	
+
 	return resultIntensity;
 }
 

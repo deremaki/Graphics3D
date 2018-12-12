@@ -15,7 +15,7 @@ namespace Graphics3D
 
         TimeSpan previousTime;
 
-        Effect shader;
+        Effect shader, textured;
 
         bool shaders = true;
 
@@ -37,6 +37,9 @@ namespace Graphics3D
         Model tree;
         Model ship;
         Model sphere;
+        Model helicopter;
+
+        Texture2D heliTexture;
 
         //primitives
         Sphere planet, moonbase1, moonbase2, moonbase3;
@@ -73,11 +76,16 @@ namespace Graphics3D
             reflection = new Reflection(Content);
 
             shader = Content.Load<Effect>("Shaders/Shader");
+            textured = Content.Load<Effect>("Shaders/Textured");
 
             ship = Content.Load<Model>("Models/Copy_of_evac_ship_9");
             tree = Content.Load<Model>("Models/tree");
             bulb = Content.Load<Model>("Models/Lightbulb");
             sphere = Content.Load<Model>("Models/UntexturedSphere");
+            helicopter = Content.Load<Model>("Models/Helicopter");
+
+            heliTexture = Content.Load<Texture2D>("Models/helicopterTexture");
+           // texture = Content.Load<Texture2D>("Models/helicopterTexture");
 
             planet = new Sphere(100, 64);
             moonbase1 = new Sphere(14, 6);
@@ -149,26 +157,30 @@ namespace Graphics3D
                 moonbase3.DrawShader(shader, camera.Position, GraphicsDevice, world, view, projection, Color.MonoGameOrange, colorSwitch);
             }
 
-            DrawModel(tree, world, view, projection, new Vector3(10.0f, 15.0f, 48.0f), Color.ForestGreen, 90.0f, 0.0f, 1.0f);
-            DrawModel(tree, world, view, projection, new Vector3(20.0f, 10.0f, 45.0f), Color.DarkOliveGreen, 90.0f, 0.0f, 1.0f);
-            DrawModel(tree, world, view, projection, new Vector3(20.0f, 20.0f, 40.0f), Color.MediumSeaGreen, 90.0f, 0.0f, 1.0f);
+            DrawModel(tree, world, view, projection, new Vector3(10.0f, 15.0f, 48.0f), Color.ForestGreen, 90.0f, 0.0f, 0.0f, 1.0f);
+            DrawModel(tree, world, view, projection, new Vector3(20.0f, 10.0f, 45.0f), Color.DarkOliveGreen, 90.0f, 0.0f, 0.0f, 1.0f);
+            DrawModel(tree, world, view, projection, new Vector3(20.0f, 20.0f, 40.0f), Color.MediumSeaGreen, 90.0f, 0.0f, 0.0f, 1.0f);
 
             if (colorSwitch == 0)
             {
-                DrawModel(bulb, world, view, projection, new Vector3(-20.0f, -15.0f, 60.0f), Color.Red, 90.0f, 0.0f, 3.0f);
-                DrawModel(bulb, world, view, projection, new Vector3(20.0f, -15.0f, 60.0f), Color.Blue, 90.0f, 0.0f, 3.0f);
+                DrawModel(bulb, world, view, projection, new Vector3(-20.0f, -15.0f, 60.0f), Color.Red, 90.0f, 0.0f, 0.0f, 3.0f);
+                DrawModel(bulb, world, view, projection, new Vector3(20.0f, -15.0f, 60.0f), Color.Blue, 90.0f, 0.0f, 0.0f, 3.0f);
             }
             else {
-                DrawModel(bulb, world, view, projection, new Vector3(-20.0f, -15.0f, 60.0f), Color.Blue, 90.0f, 0.0f, 3.0f);
-                DrawModel(bulb, world, view, projection, new Vector3(20.0f, -15.0f, 60.0f), Color.Red, 90.0f, 0.0f, 3.0f);
+                DrawModel(bulb, world, view, projection, new Vector3(-20.0f, -15.0f, 60.0f), Color.Blue, 90.0f, 0.0f, 0.0f, 3.0f);
+                DrawModel(bulb, world, view, projection, new Vector3(20.0f, -15.0f, 60.0f), Color.Red, 90.0f, 0.0f, 0.0f, 3.0f);
             }
             
-            DrawModel(ship, world, view, projection, new Vector3(0.0f, 35.0f, 35.0f), Color.IndianRed, 40.0f, 0.0f, 0.01f);
+            DrawModel(ship, world, view, projection, new Vector3(0.0f, 35.0f, 35.0f), Color.IndianRed, 40.0f, 0.0f, 0.0f, 0.01f);
+
+            DrawModelWithTexture(helicopter, world, view, projection, new Vector3(-30.0f, 35.0f, 38.0f), Color.White, 30.0f, 280.0f, 10.0f, 3.5f, heliTexture);
 
             base.Draw(gameTime);
         }
 
-        private void DrawModel(Model model, Matrix world, Matrix view, Matrix projection, Vector3 modelLocation, Color color, float angleX, float angleY, float scale)
+        
+
+        private void DrawModel(Model model, Matrix world, Matrix view, Matrix projection, Vector3 modelLocation, Color color, float angleX, float angleY, float angleZ, float scale)
         {
             Matrix[] transforms = new Matrix[model.Bones.Count];
             model.CopyAbsoluteBoneTransformsTo(transforms);
@@ -181,13 +193,12 @@ namespace Graphics3D
                 world = transforms[mesh.ParentBone.Index]
                         * Matrix.CreateRotationX(MathHelper.ToRadians(angleX))
                         * Matrix.CreateRotationY(MathHelper.ToRadians(angleY))
+                        * Matrix.CreateRotationY(MathHelper.ToRadians(angleZ))
                         * Matrix.CreateScale(scale)
                         * Matrix.CreateTranslation(modelLocation);
 
                 if (shaders)
                 {
-                    //DrawHelper.DrawWithPointShader(mesh, world, view, projection, color);
-                    //DrawHelper.DrawWithPhongShader(mesh, world, view, projection, color, viewVector);
                     DrawHelper.DrawWithShader(mesh, shader, camera.Position, world, view, projection, color, colorSwitch);
                 }
                 else
@@ -197,6 +208,26 @@ namespace Graphics3D
             }
         }
 
+        private void DrawModelWithTexture(Model model, Matrix world, Matrix view, Matrix projection, Vector3 modelLocation, Color color, float angleX, float angleY, float angleZ, float scale, Texture2D texture)
+        {
+            Matrix[] transforms = new Matrix[model.Bones.Count];
+            model.CopyAbsoluteBoneTransformsTo(transforms);
 
+            Vector3 viewVector = Vector3.Transform(camera.LookAt - camera.Position, Matrix.CreateRotationY(0));
+            viewVector.Normalize();
+
+            foreach (ModelMesh mesh in model.Meshes)
+            {
+                world = transforms[mesh.ParentBone.Index]
+                        * Matrix.CreateRotationX(MathHelper.ToRadians(angleX))
+                        * Matrix.CreateRotationY(MathHelper.ToRadians(angleY))
+                        * Matrix.CreateRotationY(MathHelper.ToRadians(angleZ))
+                        * Matrix.CreateScale(scale)
+                        * Matrix.CreateTranslation(modelLocation);
+
+                DrawHelper.DrawWithTextureShader(mesh, textured, camera.Position, world, view, projection, texture);
+
+            }
+        }
     }
 }

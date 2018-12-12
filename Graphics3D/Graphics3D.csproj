@@ -42,6 +42,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Camera.cs" />
+    <Content Include="Content\Shaders\Textured.fx" />
     <Compile Include="CoordsHelper.cs" />
     <Compile Include="DrawHelper.cs" />
     <Compile Include="Game1.cs" />
@@ -63,6 +64,7 @@
     <Content Include="Content\Models\Copy_of_evac_ship_d.png" />
     <Content Include="Content\Models\Copy_of_evac_site_ao.png" />
     <Content Include="Content\Models\Copy_of_evac_site_d.png" />
+    <Content Include="Content\Models\HelicopterTexture.png" />
     <Content Include="Content\Shaders\Const.fx" />
     <Content Include="Content\Shaders\Gourand.fx" />
     <Content Include="Content\Shaders\Phong.fx" />
@@ -78,6 +80,7 @@
     <None Include="app.manifest" />
     <None Include="Content\Models\Copy_of_evac_ship_9.fbx" />
     <None Include="Content\Models\Fridge.FBX" />
+    <None Include="Content\Models\Helicopter.fbx" />
     <None Include="Content\Models\Lightbulb.fbx" />
     <None Include="Content\Models\tree.fbx" />
     <None Include="Content\Skybox\cube.fbx" />
