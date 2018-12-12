@@ -13,6 +13,8 @@ namespace Graphics3D
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        KeyboardState newState, oldState;
+
         TimeSpan previousTime;
 
         Effect shader, textured, shadertextured;
@@ -41,8 +43,11 @@ namespace Graphics3D
         Model locomotive, wagon1, wagon2, wagon3;
 
         Vector3 trainPosition = new Vector3(-50.0f, 0.0f, 0.0f);
-        float trainRotationX = 0.0f;
-        float trainRotationY = 0.0f;
+
+        int textureFiltering = 1;
+        int msaa = 0;
+        int trilinear = 0;
+        int levels = 0;
 
         Texture2D heliTexture, shipTexture;
 
@@ -140,13 +145,113 @@ namespace Graphics3D
                 colorSwitch = (colorSwitch + 1) % 2;
             }
 
+            newState = Keyboard.GetState();
+
+            if (newState.IsKeyDown(Keys.F))
+            {
+                if (!oldState.IsKeyDown(Keys.F))
+                {
+                    textureFiltering = (textureFiltering + 1) % 2;
+                }
+            }
+
+            if (newState.IsKeyDown(Keys.T))
+            {
+                if (!oldState.IsKeyDown(Keys.T))
+                {
+                    trilinear = (trilinear + 1) % 2;
+                }
+            }
+
+            if (newState.IsKeyDown(Keys.M))
+            {
+                if (!oldState.IsKeyDown(Keys.M))
+                {
+                    msaa = (msaa + 1) % 2;
+                }
+            }
+
+            if (newState.IsKeyDown(Keys.L))
+            {
+                if (!oldState.IsKeyDown(Keys.L))
+                {
+                    levels = (levels + 1) % 8;
+                }
+            }
+
+            oldState = newState;
+
+            Window.Title = "TextureFilter = " + textureFiltering + ", Trilinear = " + trilinear + ", MSAA = " + msaa + ", mipmap levels = " + levels;
+
+            if (textureFiltering == 0)
+            {
+                SamplerState point = new SamplerState();
+                point.AddressU = TextureAddressMode.Clamp;
+                point.AddressV = TextureAddressMode.Clamp;
+                if (trilinear == 0)
+                    point.Filter = TextureFilter.MinLinearMagPointMipPoint;
+                else
+                {
+                    point.Filter = TextureFilter.MinLinearMagPointMipLinear;
+                    if (levels > 0)
+                        point.MipMapLevelOfDetailBias = levels;
+                }
+
+
+                GraphicsDevice.SamplerStates[0] = point;
+            }
+            else
+            {
+                SamplerState linear = new SamplerState();
+                linear.AddressU = TextureAddressMode.Clamp;
+                linear.AddressV = TextureAddressMode.Clamp;
+                if (trilinear == 0)
+                    linear.Filter = TextureFilter.MinPointMagLinearMipPoint;
+                else
+                {
+                    linear.Filter = TextureFilter.MinPointMagLinearMipLinear;
+                    if (levels > 0)
+                        linear.MipMapLevelOfDetailBias = levels;
+                }
+                GraphicsDevice.SamplerStates[0] = linear;
+            }
+
+            if (msaa == 0)
+            {
+                graphics.PreferMultiSampling = false;
+
+                var rasterizerState = new RasterizerState
+                {
+                    MultiSampleAntiAlias = false,
+                };
+
+                GraphicsDevice.RasterizerState = rasterizerState;
+                GraphicsDevice.PresentationParameters.MultiSampleCount = false ? 2 : 0;
+
+                graphics.ApplyChanges();
+            }
+            else
+            {
+                graphics.PreferMultiSampling = true;
+
+                var rasterizerState2 = new RasterizerState
+                {
+                    MultiSampleAntiAlias = true,
+                };
+
+                GraphicsDevice.RasterizerState = rasterizerState2;
+                GraphicsDevice.PresentationParameters.MultiSampleCount = true ? 2 : 0;
+
+                graphics.ApplyChanges();
+
+            }
+
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
-                      
 
             view = camera.View;
 
@@ -155,6 +260,10 @@ namespace Graphics3D
             GraphicsDevice.RasterizerState = RasterizerState.CullCounterClockwise;
 
             reflection.DrawModelWithEffect(sphere, world, view, projection, camera.Position, 5.0f, new Vector3(40.0f, 45.0f, 48.0f));
+
+            DrawModelWithTexture(ship, world, view, projection, new Vector3(0.0f, 35.0f, 35.0f), Color.IndianRed, 40.0f, 0.0f, 0.0f, 0.01f, shipTexture);
+
+            DrawModelWithTexture(helicopter, world, view, projection, new Vector3(-30.0f, 35.0f, 38.0f), Color.White, -40.0f, 180.0f, -10.0f, 3.5f, heliTexture);
 
             if (!shaders)
             {
@@ -180,21 +289,20 @@ namespace Graphics3D
                 DrawModel(bulb, world, view, projection, new Vector3(-20.0f, -15.0f, 60.0f), Color.Red, 90.0f, 0.0f, 0.0f, 3.0f);
                 DrawModel(bulb, world, view, projection, new Vector3(20.0f, -15.0f, 60.0f), Color.Blue, 90.0f, 0.0f, 0.0f, 3.0f);
             }
-            else {
+            else
+            {
                 DrawModel(bulb, world, view, projection, new Vector3(-20.0f, -15.0f, 60.0f), Color.Blue, 90.0f, 0.0f, 0.0f, 3.0f);
                 DrawModel(bulb, world, view, projection, new Vector3(20.0f, -15.0f, 60.0f), Color.Red, 90.0f, 0.0f, 0.0f, 3.0f);
             }
-            
-            DrawModelWithTexture(ship, world, view, projection, new Vector3(0.0f, 35.0f, 35.0f), Color.IndianRed, 40.0f, 0.0f, 0.0f, 0.01f, shipTexture);
 
-            DrawModelWithTexture(helicopter, world, view, projection, new Vector3(-30.0f, 35.0f, 38.0f), Color.White, -40.0f, 180.0f, -10.0f, 3.5f, heliTexture);
+
 
             //DrawModelWithTexture(locomotive, world, view, projection, trainPosition, Color.Gold, 90.0f, -90.0f, 0.0f, 0.03f, null);
-            
+
             base.Draw(gameTime);
         }
 
-        
+
 
         private void DrawModel(Model model, Matrix world, Matrix view, Matrix projection, Vector3 modelLocation, Color color, float angleX, float angleY, float angleZ, float scale)
         {

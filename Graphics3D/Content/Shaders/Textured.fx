@@ -18,10 +18,6 @@ float3 ViewVector = float3(1, 0, 0);
 texture ModelTexture;
 sampler2D textureSampler = sampler_state {
     Texture = (ModelTexture);
-    MinFilter = Linear;
-    MagFilter = Linear;
-    AddressU = Clamp;
-    AddressV = Clamp;
 };
  
 struct VertexShaderInput
