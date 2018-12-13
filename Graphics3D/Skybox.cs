@@ -15,7 +15,7 @@ namespace Graphics3D
 
         private Effect skyBoxEffect;
 
-        private float size = 200.0f;
+        private float size = 500.0f;
 
         public Skybox(ContentManager Content)
         {

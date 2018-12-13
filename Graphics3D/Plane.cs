@@ -27,69 +27,43 @@ namespace Graphics3D
             float s = size / 2;
 
             vertices.Add(new VertexPositionNormalTexture() {
-                Position = position - new Vector3(-s, 0.0f, s),
-                Normal = position,
+                Position = position - new Vector3(-s, s, 0.0f),
+                Normal = position - new Vector3(-s, s, 0.0f),
                 TextureCoordinate = new Vector2(0.0f, 0.0f)
             });
 
             vertices.Add(new VertexPositionNormalTexture()
             {
-                Position = position - new Vector3(s, 0.0f, -s),
-                Normal = position,
+                Position = position - new Vector3(s, -s, 0.0f),
+                Normal = position - new Vector3(s, -s, 0.0f),
                 TextureCoordinate = new Vector2(1.0f, 1.0f)
             });
 
             vertices.Add(new VertexPositionNormalTexture()
             {
-                Position = position - new Vector3(-s, 0.0f, -s),
-                Normal = position,
+                Position = position - new Vector3(-s, -s, 0.0f),
+                Normal = position - new Vector3(-s, -s, 0.0f),
                 TextureCoordinate = new Vector2(0.0f, 1.0f)
             });
 
             vertices.Add(new VertexPositionNormalTexture()
             {
-                Position = position - new Vector3(s + 0.1f, 0.0f, -s - 0.1f),
-                Normal = position,
+                Position = position - new Vector3(s + 0.1f, -s - 0.1f, 0.0f),
+                Normal = position - new Vector3(s + 0.1f, -s - 0.1f, 0.0f),
                 TextureCoordinate = new Vector2(1.0f, 1.0f)
             });
             vertices.Add(new VertexPositionNormalTexture()
             {
-                Position = position - new Vector3(-s - 0.1f, 0.0f, s + 0.1f),
-                Normal = position,
+                Position = position - new Vector3(-s - 0.1f, s + 0.1f, 0.0f),
+                Normal = position - new Vector3(-s - 0.1f, s + 0.1f, 0.0f),
                 TextureCoordinate = new Vector2(0.0f, 0.0f)
             });
             vertices.Add(new VertexPositionNormalTexture()
             {
-                Position = position - new Vector3(s + 0.1f, 0.0f, s + 0.1f),
-                Normal = position,
+                Position = position - new Vector3(s + 0.1f, s + 0.1f, 0.0f),
+                Normal = position - new Vector3(s + 0.1f, s + 0.1f, 0.0f),
                 TextureCoordinate = new Vector2(1.0f, 0.0f)
             });
-
-            //// Fill the sphere body with triangles joining each pair of latitude rings.
-            //for (int i = 0; i < verticalSegments - 2; i++)
-            //{
-            //    for (int j = 0; j < horizontalSegments; j++)
-            //    {
-            //        int nextI = i + 1;
-            //        int nextJ = (j + 1) % horizontalSegments;
-
-            //        AddIndex(1 + i * horizontalSegments + j);
-            //        AddIndex(1 + i * horizontalSegments + nextJ);
-            //        AddIndex(1 + nextI * horizontalSegments + j);
-
-            //        AddIndex(1 + i * horizontalSegments + nextJ);
-            //        AddIndex(1 + nextI * horizontalSegments + nextJ);
-            //        AddIndex(1 + nextI * horizontalSegments + j);
-            //    }
-            //}
-
-            //// Create a fan connecting the top vertex to the top latitude ring.
-            //for (int i = 0; i < horizontalSegments; i++)
-            //{
-            //    AddIndex(vertices.Count - 1);
-            //    AddIndex(vertices.Count - 2 - (i + 1) % horizontalSegments);
-            //    AddIndex(vertices.Count - 2 - i);
-            //}
         }
 
         public void Initialize(GraphicsDevice graphicsDevice)
@@ -136,10 +110,11 @@ namespace Graphics3D
             graphicsDevice.SetVertexBuffer(this.vertexBuffer);
             graphicsDevice.Indices = this.indexBuffer;
 
+            
 
-            world = world
-                       * Matrix.CreateRotationX(MathHelper.ToRadians(90))
-                       * Matrix.CreateBillboard(this.planePosition, camera.Position, camera.UpVector, camera.ForwardVector);
+            world = world;
+                       //* Matrix.CreateRotationY(MathHelper.ToRadians(90))
+                       //* Matrix.CreateBillboard(this.planePosition, camera.Position, camera.UpVector, camera.ForwardVector);
 
             effect.Parameters["World"].SetValue(world);
             effect.Parameters["View"].SetValue(view);

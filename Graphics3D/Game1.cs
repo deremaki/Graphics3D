@@ -17,7 +17,7 @@ namespace Graphics3D
 
         TimeSpan previousTime;
 
-        Effect shader, textured, shadertextured;
+        Effect shader, textured, shadertextured, texturedAlpha, billboardEffect;
 
         bool shaders = true;
 
@@ -55,7 +55,7 @@ namespace Graphics3D
         //primitives
         Sphere planet, moonbase1, moonbase2, moonbase3;
         Plane asteroid;
-
+        Billboard billboard;
 
 
         public Game1()
@@ -90,6 +90,8 @@ namespace Graphics3D
             shader = Content.Load<Effect>("Shaders/Shader");
             textured = Content.Load<Effect>("Shaders/Textured");
             shadertextured = Content.Load<Effect>("Shaders/ShaderTextures");
+            texturedAlpha = Content.Load<Effect>("Shaders/TexturedAlpha");
+            billboardEffect = Content.Load<Effect>("Shaders/Billboard");
 
             ship = Content.Load<Model>("Models/Copy_of_evac_ship_9");
             tree = Content.Load<Model>("Models/tree");
@@ -123,6 +125,9 @@ namespace Graphics3D
 
             asteroid = new Plane(new Vector3(-100.0f, 0.0f, 0.0f), 10.0f);
             asteroid.Initialize(GraphicsDevice);
+
+            billboard = new Billboard(new Vector3(-80.0f, 0.0f, 0.0f), 10.0f, GraphicsDevice);
+            billboard.Initialize();
         }
 
         protected override void UnloadContent()
@@ -261,7 +266,7 @@ namespace Graphics3D
             GraphicsDevice.Clear(Color.Black);
 
             view = camera.View;
-
+                               
             GraphicsDevice.RasterizerState = RasterizerState.CullClockwise;
             skybox.Draw(view, projection, camera.Position);
             GraphicsDevice.RasterizerState = RasterizerState.CullCounterClockwise;
@@ -302,12 +307,11 @@ namespace Graphics3D
                 DrawModel(bulb, world, view, projection, new Vector3(20.0f, -15.0f, 60.0f), Color.Red, 90.0f, 0.0f, 0.0f, 3.0f);
             }
 
-            //DrawAsBillboard(plane, world, view, projection, new Vector3(-72.0f, -10.0f, 10.0f), Color.Red, 0.03f, asteroidTexture);
 
-            //GraphicsDevice.RasterizerState = RasterizerState.CullClockwise;
-            asteroid.DrawAsBillboardShader(textured, camera, GraphicsDevice, world, view, projection, asteroidTexture);
-            //asteroid.Draw(GraphicsDevice, camera, world, view, projection, asteroidTexture);
-            //GraphicsDevice.RasterizerState = RasterizerState.CullCounterClockwise;
+            //DrawAsBillboard(plane, world, view, projection, new Vector3(-72.0f, -10.0f, 10.0f), Color.Red, 0.03f, asteroidTexture);
+            //asteroid.DrawAsBillboardShader(textured, camera, GraphicsDevice, world, view, projection, asteroidTexture);
+
+            billboard.DrawBillboard(billboardEffect, camera, projection, asteroidTexture);
 
             base.Draw(gameTime);
         }

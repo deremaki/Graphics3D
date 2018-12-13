@@ -395,6 +395,12 @@
 /processorParam:TextureFormat=Compressed
 /build:Models/wagon3.fbx
 
+#begin Shaders/Billboard.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/Billboard.fx
+
 #begin Shaders/Const.fx
 /importer:EffectImporter
 /processor:EffectProcessor
@@ -442,6 +448,12 @@
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:Shaders/Textured.fx
+
+#begin Shaders/TexturedAlpha.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Shaders/TexturedAlpha.fx
 
 #begin Skybox/cube.fbx
 /importer:FbxImporter

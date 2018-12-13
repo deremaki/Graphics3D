@@ -41,6 +41,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Billboard.cs" />
     <Compile Include="Camera.cs" />
     <Content Include="Content\Models\asteroid.png" />
     <Content Include="Content\Models\textures\BeachBallTexture.png" />
@@ -52,7 +53,9 @@
     <Content Include="Content\Models\textures\wagon5.png" />
     <Content Include="Content\Models\textures\wagon6.png" />
     <Content Include="Content\Models\textures\wood.png" />
+    <Content Include="Content\Shaders\Billboard.fx" />
     <Content Include="Content\Shaders\ShaderTextures.fx" />
+    <Content Include="Content\Shaders\TexturedAlpha.fx" />
     <Content Include="Content\Shaders\Textured.fx" />
     <Compile Include="CoordsHelper.cs" />
     <Compile Include="DrawHelper.cs" />
