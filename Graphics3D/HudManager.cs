@@ -142,7 +142,7 @@ namespace Graphics3D
 
             spriteBatch.Draw(comboBoxTexture,
                              new Rectangle(comboBoxPosX, comboBoxPosY, comboBoxWidth, comboBoxHeight),
-                             new Rectangle(0, 0, comboBoxWidth, comboBoxHeight),
+                             /*new Rectangle(0, 0, comboBoxWidth, comboBoxHeight),*/
                              Color.White);
             spriteBatch.DrawString(font, options[selectedIndex],
                                     new Vector2(comboBoxPosX + offsetX, comboBoxPosY + offsetY), Color.Black);
@@ -169,7 +169,7 @@ namespace Graphics3D
                 }
                 spriteBatch.Draw(comboBoxTexture,
                                  new Rectangle(comboBoxPosX, comboBoxPosY + comboBoxHeight * (comboBoxOptionsCount + 1) - 2, comboBoxWidth, 2),
-                                 new Rectangle(0, 0, comboBoxWidth, 2),
+                                 /*new Rectangle(0, 0, comboBoxWidth, 2),*/
                                  Color.White);
             }
 
