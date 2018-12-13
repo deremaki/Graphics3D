@@ -17,7 +17,7 @@ namespace Graphics3D
 
         TimeSpan previousTime;
 
-        Effect shader, textured, shadertextured, texturedAlpha, billboardEffect;
+        Effect shader, textured, shadertextured, texturedAlpha, billboardEffect, bump;
 
         bool shaders = true;
 
@@ -52,7 +52,7 @@ namespace Graphics3D
         int trilinear = 0;
         int levels = 0;
 
-        Texture2D heliTexture, shipTexture, asteroidTexture, planeBackTexture;
+        Texture2D heliTexture, shipTexture, asteroidTexture, planeBackTexture, normalMap;
 
         //primitives
         Sphere planet, moonbase1, moonbase2, moonbase3;
@@ -94,6 +94,7 @@ namespace Graphics3D
             shadertextured = Content.Load<Effect>("Shaders/ShaderTextures");
             texturedAlpha = Content.Load<Effect>("Shaders/TexturedAlpha");
             billboardEffect = Content.Load<Effect>("Shaders/Billboard");
+            bump = Content.Load<Effect>("Shaders/BumpMap");
 
             ship = Content.Load<Model>("Models/Copy_of_evac_ship_9");
             tree = Content.Load<Model>("Models/tree");
@@ -112,6 +113,7 @@ namespace Graphics3D
             shipTexture = Content.Load<Texture2D>("Models/Copy_of_evac_ship_d");
             asteroidTexture = Content.Load<Texture2D>("Models/asteroid");
             planeBackTexture = Content.Load<Texture2D>("Models/textures/red_metal");
+            normalMap = Content.Load<Texture2D>("Models/HelicopterNormalMap");
 
             planet = new Sphere(100, 64);
             moonbase1 = new Sphere(14, 6);
@@ -325,7 +327,8 @@ namespace Graphics3D
 
             DrawModelWithTexture(ship, world, view, projection, new Vector3(0.0f, 35.0f, 35.0f), Color.IndianRed, 40.0f, 0.0f, 0.0f, 0.01f, shipTexture);
 
-            DrawModelWithTexture(helicopter, world, view, projection, new Vector3(-30.0f, 35.0f, 38.0f), Color.White, -40.0f, 180.0f, -10.0f, 3.5f, heliTexture);
+            //DrawModelWithTexture(helicopter, world, view, projection, new Vector3(-30.0f, 35.0f, 38.0f), Color.White, -40.0f, 180.0f, -10.0f, 3.5f, heliTexture);
+            DrawModelWithTextureBump(helicopter, world, view, projection, new Vector3(-30.0f, 35.0f, 38.0f), Color.White, -40.0f, 180.0f, -10.0f, 3.5f, heliTexture, normalMap);
 
             if (!shaders)
             {
@@ -420,6 +423,25 @@ namespace Graphics3D
                         * Matrix.CreateTranslation(modelLocation);
 
                 DrawHelper.DrawWithTextureShader(mesh, textured, camera.Position, world, view, projection, texture);
+                //DrawHelper.DrawWithShaderTextured(mesh, shadertextured, camera.Position, world, view, projection, color, colorSwitch, texture);
+            }
+        }
+
+        private void DrawModelWithTextureBump(Model model, Matrix world, Matrix view, Matrix projection, Vector3 modelLocation, Color color, float angleX, float angleY, float angleZ, float scale, Texture2D texture, Texture2D normalMap)
+        {
+            Matrix[] transforms = new Matrix[model.Bones.Count];
+            model.CopyAbsoluteBoneTransformsTo(transforms);
+
+            foreach (ModelMesh mesh in model.Meshes)
+            {
+                world = transforms[mesh.ParentBone.Index]
+                        * Matrix.CreateRotationX(MathHelper.ToRadians(angleX))
+                        * Matrix.CreateRotationY(MathHelper.ToRadians(angleY))
+                        * Matrix.CreateRotationY(MathHelper.ToRadians(angleZ))
+                        * Matrix.CreateScale(scale)
+                        * Matrix.CreateTranslation(modelLocation);
+
+                DrawHelper.DrawWithTextureBumpShader(mesh, bump, camera.Position, world, view, projection, texture, normalMap);
                 //DrawHelper.DrawWithShaderTextured(mesh, shadertextured, camera.Position, world, view, projection, color, colorSwitch, texture);
             }
         }

@@ -141,6 +141,33 @@ namespace Graphics3D
             mesh.Draw();
         }
 
+        public static void DrawWithTextureBumpShader(ModelMesh mesh, Effect shader, Vector3 cameraPosition, Matrix world, Matrix view, Matrix projection, Texture2D texture, Texture2D normalMap)
+        {
+            foreach (ModelMeshPart part in mesh.MeshParts)
+            {
+                part.Effect = shader;
+
+                shader.Parameters["World"].SetValue(world);
+                shader.Parameters["View"].SetValue(view);
+                shader.Parameters["Projection"].SetValue(projection);
+
+                shader.Parameters["WorldInverseTranspose"].SetValue(Matrix.Transpose(Matrix.Invert(world)));
+
+                shader.Parameters["ModelTexture"].SetValue(texture);
+
+                shader.Parameters["AmbientColor"].SetValue(Color.White.ToVector4());
+                shader.Parameters["AmbientIntensity"].SetValue(0.1f);
+                shader.Parameters["DiffuseLightDirection"].SetValue(new Vector3(0.0f, 1000.0f, 1000.0f));
+                //shader.Parameters["DiffuseColor"].SetValue(Color.White.ToVector4());
+                //shader.Parameters["DiffuseIntensity"].SetValue(1.0f);
+                shader.Parameters["Shininess"].SetValue(20.0f);
+                shader.Parameters["SpecularColor"].SetValue(Color.White.ToVector4());
+                shader.Parameters["SpecularIntensity"].SetValue(0.8f);
+                shader.Parameters["NormalMap"].SetValue(normalMap);
+            }
+            mesh.Draw();
+        }
+
 
         public static void DrawAsBasicEffect(ModelMesh mesh, Matrix world, Matrix view, Matrix projection, Color color)
         {

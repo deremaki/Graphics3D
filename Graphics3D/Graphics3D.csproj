@@ -57,6 +57,7 @@
     <Content Include="Content\Shaders\ShaderTextures.fx" />
     <Content Include="Content\Shaders\TexturedAlpha.fx" />
     <Content Include="Content\Shaders\Textured.fx" />
+    <Content Include="Content\Shaders\BumpMap.fx" />
     <Compile Include="CoordsHelper.cs" />
     <Compile Include="DrawHelper.cs" />
     <Compile Include="Game1.cs" />
