@@ -105,16 +105,14 @@ namespace Graphics3D
             }
         }
 
-        public void DrawAsBillboardShader(Effect effect, Camera camera, GraphicsDevice graphicsDevice, Matrix world, Matrix view, Matrix projection, Texture2D texture)
+        public void DrawAsShader(Effect effect, Camera camera, GraphicsDevice graphicsDevice, Matrix world, Matrix view, Matrix projection, Texture2D texture, float rotation)
         {
             graphicsDevice.SetVertexBuffer(this.vertexBuffer);
             graphicsDevice.Indices = this.indexBuffer;
 
-            
 
-            world = world;
-                       //* Matrix.CreateRotationY(MathHelper.ToRadians(90))
-                       //* Matrix.CreateBillboard(this.planePosition, camera.Position, camera.UpVector, camera.ForwardVector);
+
+            world = world * Matrix.CreateRotationY(MathHelper.ToRadians(rotation));
 
             effect.Parameters["World"].SetValue(world);
             effect.Parameters["View"].SetValue(view);

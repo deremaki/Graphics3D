@@ -34,6 +34,8 @@ namespace Graphics3D
         Skybox skybox;
         Reflection reflection;
 
+        RenderTarget2D renderTarget;
+
         //models
         Model bulb;
         Model tree;
@@ -41,7 +43,7 @@ namespace Graphics3D
         Model sphere;
         Model helicopter;
         Model locomotive, wagon1, wagon2, wagon3;
-        Model plane;
+        Model planeModel;
 
         Vector3 trainPosition = new Vector3(-50.0f, 0.0f, 0.0f);
 
@@ -50,11 +52,11 @@ namespace Graphics3D
         int trilinear = 0;
         int levels = 0;
 
-        Texture2D heliTexture, shipTexture, asteroidTexture;
+        Texture2D heliTexture, shipTexture, asteroidTexture, planeBackTexture;
 
         //primitives
         Sphere planet, moonbase1, moonbase2, moonbase3;
-        Plane asteroid;
+        Plane planeBack, planeFront;
         Billboard billboard, billboard1, billboard2, billboard3, billboard4, billboard5, billboard6, billboard7, billboard8, billboard9, billboard10, billboard11, billboard12, billboard13, billboard14;
 
 
@@ -98,7 +100,7 @@ namespace Graphics3D
             bulb = Content.Load<Model>("Models/Lightbulb");
             sphere = Content.Load<Model>("Models/UntexturedSphere");
             helicopter = Content.Load<Model>("Models/Helicopter");
-            plane = Content.Load<Model>("Models/plane");
+            planeModel = Content.Load<Model>("Models/plane");
 
             locomotive = Content.Load<Model>("Models/train");
 
@@ -109,7 +111,7 @@ namespace Graphics3D
             heliTexture = Content.Load<Texture2D>("Models/helicopterTexture");
             shipTexture = Content.Load<Texture2D>("Models/Copy_of_evac_ship_d");
             asteroidTexture = Content.Load<Texture2D>("Models/asteroid");
-            // texture = Content.Load<Texture2D>("Models/helicopterTexture");
+            planeBackTexture = Content.Load<Texture2D>("Models/textures/red_metal");
 
             planet = new Sphere(100, 64);
             moonbase1 = new Sphere(14, 6);
@@ -123,8 +125,18 @@ namespace Graphics3D
             moonbase2.Initialize(GraphicsDevice);
             moonbase3.Initialize(GraphicsDevice);
 
-            asteroid = new Plane(new Vector3(-100.0f, 0.0f, 0.0f), 10.0f);
-            asteroid.Initialize(GraphicsDevice);
+            planeBack = new Plane(new Vector3(0.0f, 55.0f, 0.0f), 10.0f);
+            planeBack.Initialize(GraphicsDevice);
+            planeFront = new Plane(new Vector3(0.0f, 55.0f, 0.0f), 10.0f);
+            planeFront.Initialize(GraphicsDevice);
+
+            renderTarget = new RenderTarget2D(
+                GraphicsDevice,
+                GraphicsDevice.PresentationParameters.BackBufferWidth,
+                GraphicsDevice.PresentationParameters.BackBufferHeight,
+                false,
+                GraphicsDevice.PresentationParameters.BackBufferFormat,
+                DepthFormat.Depth24);
 
             billboard = new Billboard(new Vector3(-80.0f, 10.0f, 0.0f), GraphicsDevice);
             billboard1 = new Billboard(new Vector3(-89.0f, 5.0f, 5.0f), GraphicsDevice);
@@ -291,10 +303,20 @@ namespace Graphics3D
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Black);
+            DrawSceneToTexture(renderTarget);
 
+            GraphicsDevice.Clear(Color.Black);
+            DrawScene();
+
+            planeFront.DrawAsShader(textured, camera, GraphicsDevice, world, view, projection, renderTarget, 0.0f);
+
+            base.Draw(gameTime);
+        }
+
+        private void DrawScene()
+        {
             view = camera.View;
-                               
+
             GraphicsDevice.RasterizerState = RasterizerState.CullClockwise;
             skybox.Draw(view, projection, camera.Position);
             GraphicsDevice.RasterizerState = RasterizerState.CullCounterClockwise;
@@ -337,7 +359,7 @@ namespace Graphics3D
 
 
             //DrawAsBillboard(plane, world, view, projection, new Vector3(-72.0f, -10.0f, 10.0f), Color.Red, 0.03f, asteroidTexture);
-            //asteroid.DrawAsBillboardShader(textured, camera, GraphicsDevice, world, view, projection, asteroidTexture);
+            planeBack.DrawAsShader(textured, camera, GraphicsDevice, world, view, projection, planeBackTexture, 180.0f);
 
             billboard.DrawBillboard(billboardEffect, camera, projection, asteroidTexture, 4.0f);
             billboard1.DrawBillboard(billboardEffect, camera, projection, asteroidTexture, 2.0f);
@@ -354,9 +376,6 @@ namespace Graphics3D
             billboard12.DrawBillboard(billboardEffect, camera, projection, asteroidTexture, 2.0f);
             billboard13.DrawBillboard(billboardEffect, camera, projection, asteroidTexture, 1.0f);
             billboard14.DrawBillboard(billboardEffect, camera, projection, asteroidTexture, 1.5f);
-
-
-            base.Draw(gameTime);
         }
 
 
@@ -421,6 +440,20 @@ namespace Graphics3D
                 //DrawHelper.DrawWithTextureShader(mesh, textured, camera.Position, world, view, projection, texture);
 
             }
+        }
+
+        private void DrawSceneToTexture(RenderTarget2D renderTarget)
+        {
+            GraphicsDevice.SetRenderTarget(renderTarget);
+
+            GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true };
+
+            // Draw the scene
+            GraphicsDevice.Clear(Color.Black);
+            DrawScene();
+
+            // Drop the render target
+            GraphicsDevice.SetRenderTarget(null);
         }
 
 
