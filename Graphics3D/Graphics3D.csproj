@@ -42,6 +42,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Camera.cs" />
+    <Content Include="Content\Models\asteroid.png" />
     <Content Include="Content\Models\textures\BeachBallTexture.png" />
     <Content Include="Content\Models\textures\brushed_metal.png" />
     <Content Include="Content\Models\textures\dark_metal.png" />
@@ -92,6 +93,7 @@
     <None Include="Content\Models\Fridge.FBX" />
     <None Include="Content\Models\Helicopter.fbx" />
     <None Include="Content\Models\Lightbulb.fbx" />
+    <None Include="Content\Models\plane.fbx" />
     <None Include="Content\Models\train.fbx" />
     <None Include="Content\Models\tree.fbx" />
     <None Include="Content\Models\wagon1.fbx" />

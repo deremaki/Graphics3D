@@ -41,6 +41,7 @@ namespace Graphics3D
         Model sphere;
         Model helicopter;
         Model locomotive, wagon1, wagon2, wagon3;
+        Model plane;
 
         Vector3 trainPosition = new Vector3(-50.0f, 0.0f, 0.0f);
 
@@ -49,7 +50,7 @@ namespace Graphics3D
         int trilinear = 0;
         int levels = 0;
 
-        Texture2D heliTexture, shipTexture;
+        Texture2D heliTexture, shipTexture, asteroidTexture;
 
         //primitives
         Sphere planet, moonbase1, moonbase2, moonbase3;
@@ -94,6 +95,7 @@ namespace Graphics3D
             bulb = Content.Load<Model>("Models/Lightbulb");
             sphere = Content.Load<Model>("Models/UntexturedSphere");
             helicopter = Content.Load<Model>("Models/Helicopter");
+            plane = Content.Load<Model>("Models/plane");
 
             locomotive = Content.Load<Model>("Models/train");
 
@@ -103,6 +105,7 @@ namespace Graphics3D
 
             heliTexture = Content.Load<Texture2D>("Models/helicopterTexture");
             shipTexture = Content.Load<Texture2D>("Models/Copy_of_evac_ship_d");
+            asteroidTexture = Content.Load<Texture2D>("Models/asteroid");
             // texture = Content.Load<Texture2D>("Models/helicopterTexture");
 
             planet = new Sphere(100, 64);
@@ -295,9 +298,7 @@ namespace Graphics3D
                 DrawModel(bulb, world, view, projection, new Vector3(20.0f, -15.0f, 60.0f), Color.Red, 90.0f, 0.0f, 0.0f, 3.0f);
             }
 
-
-
-            //DrawModelWithTexture(locomotive, world, view, projection, trainPosition, Color.Gold, 90.0f, -90.0f, 0.0f, 0.03f, null);
+            DrawAsBillboard(plane, world, view, projection, new Vector3(-62.0f, 5.0f, 0.0f), Color.Red, 0.03f);
 
             base.Draw(gameTime);
         }
@@ -308,9 +309,6 @@ namespace Graphics3D
         {
             Matrix[] transforms = new Matrix[model.Bones.Count];
             model.CopyAbsoluteBoneTransformsTo(transforms);
-
-            Vector3 viewVector = Vector3.Transform(camera.LookAt - camera.Position, Matrix.CreateRotationY(0));
-            viewVector.Normalize();
 
             foreach (ModelMesh mesh in model.Meshes)
             {
@@ -337,9 +335,6 @@ namespace Graphics3D
             Matrix[] transforms = new Matrix[model.Bones.Count];
             model.CopyAbsoluteBoneTransformsTo(transforms);
 
-            Vector3 viewVector = Vector3.Transform(camera.LookAt - camera.Position, Matrix.CreateRotationY(0));
-            viewVector.Normalize();
-
             foreach (ModelMesh mesh in model.Meshes)
             {
                 world = transforms[mesh.ParentBone.Index]
@@ -349,13 +344,25 @@ namespace Graphics3D
                         * Matrix.CreateScale(scale)
                         * Matrix.CreateTranslation(modelLocation);
 
-                if (texture == null)
-                {
-                    texture = ((BasicEffect)mesh.Effects[0]).Texture;
-                }
-
                 DrawHelper.DrawWithTextureShader(mesh, textured, camera.Position, world, view, projection, texture);
                 //DrawHelper.DrawWithShaderTextured(mesh, shadertextured, camera.Position, world, view, projection, color, colorSwitch, texture);
+            }
+        }
+
+        private void DrawAsBillboard(Model model, Matrix world, Matrix view, Matrix projection, Vector3 modelLocation, Color color, float scale)
+        {
+            Matrix[] transforms = new Matrix[model.Bones.Count];
+            model.CopyAbsoluteBoneTransformsTo(transforms);
+
+            foreach (ModelMesh mesh in model.Meshes)
+            {
+                world = transforms[mesh.ParentBone.Index]
+                        * Matrix.CreateScale(scale)
+                        * Matrix.CreateRotationY(MathHelper.ToRadians(180))
+                        * Matrix.CreateBillboard(modelLocation, camera.Position, camera.UpVector, camera.ForwardVector);
+
+                DrawHelper.DrawWithShader(mesh, shader, camera.Position, world, view, projection, color, colorSwitch);
+
             }
         }
     }
