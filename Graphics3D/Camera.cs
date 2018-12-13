@@ -107,12 +107,12 @@ namespace Graphics3D
 
             if (newState.IsKeyDown(Keys.Up))
             {
-                angleX = MathHelper.ToRadians(-0.007f);
+                angleX = MathHelper.ToRadians(-0.002f);
             }
 
             else if (newState.IsKeyDown(Keys.Down))
             {
-                angleX = MathHelper.ToRadians(0.007f);
+                angleX = MathHelper.ToRadians(0.002f);
             }
             else
             {
@@ -121,11 +121,11 @@ namespace Graphics3D
 
             if (newState.IsKeyDown(Keys.Left))
             {
-                angleY = MathHelper.ToRadians(2.0f);
+                angleY = MathHelper.ToRadians(0.5f);
             }
             else if (newState.IsKeyDown(Keys.Right))
             {
-                angleY = MathHelper.ToRadians(-2.0f);
+                angleY = MathHelper.ToRadians(-0.5f);
             }
             else
             {

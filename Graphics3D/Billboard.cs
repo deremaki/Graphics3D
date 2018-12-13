@@ -14,44 +14,42 @@ namespace Graphics3D
 
         private GraphicsDevice graphicsDevice;
 
-        public Billboard(Vector3 position, float size, GraphicsDevice device)
+        public Billboard(Vector3 position, GraphicsDevice device)
         {
             graphicsDevice = device;
             billboardPosition = position;
 
-            float s = size / 2;
-
             vertices.Add(new VertexPositionTexture()
             {
-                Position = position, // - new Vector3(-s, s, 0.0f),
+                Position = position,
                 TextureCoordinate = new Vector2(0.0f, 0.0f)
             });
 
             vertices.Add(new VertexPositionTexture()
             {
-                Position = position, // - new Vector3(s, -s, 0.0f),
+                Position = position,
                 TextureCoordinate = new Vector2(1.0f, 1.0f)
             });
 
             vertices.Add(new VertexPositionTexture()
             {
-                Position = position, // - new Vector3(-s, -s, 0.0f),
+                Position = position,
                 TextureCoordinate = new Vector2(0.0f, 1.0f)
             });
 
             vertices.Add(new VertexPositionTexture()
             {
-                Position = position, // - new Vector3(s + 0.1f, -s - 0.1f, 0.0f),
+                Position = position,
                 TextureCoordinate = new Vector2(1.0f, 1.0f)
             });
             vertices.Add(new VertexPositionTexture()
             {
-                Position = position, // - new Vector3(-s - 0.1f, s + 0.1f, 0.0f),
+                Position = position,
                 TextureCoordinate = new Vector2(0.0f, 0.0f)
             });
             vertices.Add(new VertexPositionTexture()
             {
-                Position = position, // - new Vector3(s + 0.1f, s + 0.1f, 0.0f),
+                Position = position,
                 TextureCoordinate = new Vector2(1.0f, 0.0f)
             });
         }
@@ -63,7 +61,7 @@ namespace Graphics3D
         }
 
 
-        public void DrawBillboard(Effect bbEffect, Camera camera, Matrix projection, Texture2D texture)
+        public void DrawBillboard(Effect bbEffect, Camera camera, Matrix projection, Texture2D texture, float scale)
         {
             graphicsDevice.SetVertexBuffer(vertexBuffer);
 
@@ -73,6 +71,7 @@ namespace Graphics3D
             bbEffect.Parameters["xCamPos"].SetValue(camera.Position);
             bbEffect.Parameters["xAllowedRotDir"].SetValue(camera.UpVector);
             bbEffect.Parameters["xBillboardTexture"].SetValue(texture);
+            bbEffect.Parameters["xScale"].SetValue(scale);
 
             graphicsDevice.BlendState = BlendState.AlphaBlend;
             graphicsDevice.DepthStencilState = DepthStencilState.DepthRead;

@@ -55,7 +55,7 @@ namespace Graphics3D
         //primitives
         Sphere planet, moonbase1, moonbase2, moonbase3;
         Plane asteroid;
-        Billboard billboard;
+        Billboard billboard, billboard1, billboard2, billboard3, billboard4, billboard5, billboard6, billboard7, billboard8, billboard9, billboard10, billboard11, billboard12, billboard13, billboard14;
 
 
         public Game1()
@@ -126,8 +126,36 @@ namespace Graphics3D
             asteroid = new Plane(new Vector3(-100.0f, 0.0f, 0.0f), 10.0f);
             asteroid.Initialize(GraphicsDevice);
 
-            billboard = new Billboard(new Vector3(-80.0f, 0.0f, 0.0f), 10.0f, GraphicsDevice);
+            billboard = new Billboard(new Vector3(-80.0f, 10.0f, 0.0f), GraphicsDevice);
+            billboard1 = new Billboard(new Vector3(-89.0f, 5.0f, 5.0f), GraphicsDevice);
+            billboard2 = new Billboard(new Vector3(-51.0f, 0.0f, 10.0f), GraphicsDevice);
+            billboard3 = new Billboard(new Vector3(-68.0f, -5.0f, 5.0f), GraphicsDevice);
+            billboard4 = new Billboard(new Vector3(-74.0f, -10.0f, -10.0f), GraphicsDevice);
+            billboard5 = new Billboard(new Vector3(-90.0f, -5.0f, 5.0f), GraphicsDevice);
+            billboard6 = new Billboard(new Vector3(-100.0f, -16.0f, -7.0f), GraphicsDevice);
+            billboard7 = new Billboard(new Vector3(-85.0f, 20.0f, 5.0f), GraphicsDevice);
+            billboard8 = new Billboard(new Vector3(-70.0f, 15.0f, 10.0f), GraphicsDevice);
+            billboard9 = new Billboard(new Vector3(-75.0f, -15.0f, 5.0f), GraphicsDevice);
+            billboard10 = new Billboard(new Vector3(-54.0f, 21.0f, -100.0f), GraphicsDevice);
+            billboard11 = new Billboard(new Vector3(-65.0f, 0.0f, 5.0f), GraphicsDevice);
+            billboard12 = new Billboard(new Vector3(-83.0f, 0.0f, -10.0f), GraphicsDevice);
+            billboard13 = new Billboard(new Vector3(-59.0f, 15.0f, -5.0f), GraphicsDevice);
+            billboard14 = new Billboard(new Vector3(-64.0f, 8.0f, 10.0f), GraphicsDevice);
             billboard.Initialize();
+            billboard1.Initialize();
+            billboard2.Initialize();
+            billboard3.Initialize();
+            billboard4.Initialize();
+            billboard5.Initialize();
+            billboard6.Initialize();
+            billboard7.Initialize();
+            billboard8.Initialize();
+            billboard9.Initialize();
+            billboard10.Initialize();
+            billboard11.Initialize();
+            billboard12.Initialize();
+            billboard13.Initialize();
+            billboard14.Initialize();
         }
 
         protected override void UnloadContent()
@@ -311,7 +339,22 @@ namespace Graphics3D
             //DrawAsBillboard(plane, world, view, projection, new Vector3(-72.0f, -10.0f, 10.0f), Color.Red, 0.03f, asteroidTexture);
             //asteroid.DrawAsBillboardShader(textured, camera, GraphicsDevice, world, view, projection, asteroidTexture);
 
-            billboard.DrawBillboard(billboardEffect, camera, projection, asteroidTexture);
+            billboard.DrawBillboard(billboardEffect, camera, projection, asteroidTexture, 4.0f);
+            billboard1.DrawBillboard(billboardEffect, camera, projection, asteroidTexture, 2.0f);
+            billboard2.DrawBillboard(billboardEffect, camera, projection, asteroidTexture, 3.0f);
+            billboard3.DrawBillboard(billboardEffect, camera, projection, asteroidTexture, 2.5f);
+            billboard4.DrawBillboard(billboardEffect, camera, projection, asteroidTexture, 1.5f);
+            billboard5.DrawBillboard(billboardEffect, camera, projection, asteroidTexture, 2.0f);
+            billboard6.DrawBillboard(billboardEffect, camera, projection, asteroidTexture, 3.0f);
+            billboard7.DrawBillboard(billboardEffect, camera, projection, asteroidTexture, 4.0f);
+            billboard8.DrawBillboard(billboardEffect, camera, projection, asteroidTexture, 3.5f);
+            billboard9.DrawBillboard(billboardEffect, camera, projection, asteroidTexture, 3.0f);
+            billboard10.DrawBillboard(billboardEffect, camera, projection, asteroidTexture, 2.5f);
+            billboard11.DrawBillboard(billboardEffect, camera, projection, asteroidTexture, 4.0f);
+            billboard12.DrawBillboard(billboardEffect, camera, projection, asteroidTexture, 2.0f);
+            billboard13.DrawBillboard(billboardEffect, camera, projection, asteroidTexture, 1.0f);
+            billboard14.DrawBillboard(billboardEffect, camera, projection, asteroidTexture, 1.5f);
+
 
             base.Draw(gameTime);
         }
