@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Graphics3D
 {
-    class Camera
+    public class Camera
     {
         private Vector3 cameraPosition;
         private Vector3 cameraLookAt;

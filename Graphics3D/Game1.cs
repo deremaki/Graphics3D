@@ -25,7 +25,7 @@ namespace Graphics3D
         TimeSpan previousTimeToSwitch;
         int colorSwitch = 0;
 
-        Camera camera;
+        public Camera camera;
 
         Matrix projection;
         Matrix view;
@@ -54,6 +54,7 @@ namespace Graphics3D
 
         //primitives
         Sphere planet, moonbase1, moonbase2, moonbase3;
+        Plane asteroid;
 
 
 
@@ -119,6 +120,9 @@ namespace Graphics3D
             moonbase1.Initialize(GraphicsDevice);
             moonbase2.Initialize(GraphicsDevice);
             moonbase3.Initialize(GraphicsDevice);
+
+            asteroid = new Plane(new Vector3(-100.0f, 0.0f, 0.0f), 10.0f);
+            asteroid.Initialize(GraphicsDevice);
         }
 
         protected override void UnloadContent()
@@ -298,7 +302,12 @@ namespace Graphics3D
                 DrawModel(bulb, world, view, projection, new Vector3(20.0f, -15.0f, 60.0f), Color.Red, 90.0f, 0.0f, 0.0f, 3.0f);
             }
 
-            DrawAsBillboard(plane, world, view, projection, new Vector3(-62.0f, 5.0f, 0.0f), Color.Red, 0.03f);
+            //DrawAsBillboard(plane, world, view, projection, new Vector3(-72.0f, -10.0f, 10.0f), Color.Red, 0.03f, asteroidTexture);
+
+            //GraphicsDevice.RasterizerState = RasterizerState.CullClockwise;
+            asteroid.DrawAsBillboardShader(textured, camera, GraphicsDevice, world, view, projection, asteroidTexture);
+            //asteroid.Draw(GraphicsDevice, camera, world, view, projection, asteroidTexture);
+            //GraphicsDevice.RasterizerState = RasterizerState.CullCounterClockwise;
 
             base.Draw(gameTime);
         }
@@ -349,7 +358,7 @@ namespace Graphics3D
             }
         }
 
-        private void DrawAsBillboard(Model model, Matrix world, Matrix view, Matrix projection, Vector3 modelLocation, Color color, float scale)
+        private void DrawAsBillboard(Model model, Matrix world, Matrix view, Matrix projection, Vector3 modelLocation, Color color, float scale, Texture2D texture)
         {
             Matrix[] transforms = new Matrix[model.Bones.Count];
             model.CopyAbsoluteBoneTransformsTo(transforms);
@@ -362,8 +371,11 @@ namespace Graphics3D
                         * Matrix.CreateBillboard(modelLocation, camera.Position, camera.UpVector, camera.ForwardVector);
 
                 DrawHelper.DrawWithShader(mesh, shader, camera.Position, world, view, projection, color, colorSwitch);
+                //DrawHelper.DrawWithTextureShader(mesh, textured, camera.Position, world, view, projection, texture);
 
             }
         }
+
+
     }
 }
