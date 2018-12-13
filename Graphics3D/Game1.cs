@@ -15,6 +15,8 @@ namespace Graphics3D
 
         KeyboardState newState, oldState;
 
+        HudManager hudManager;
+
         TimeSpan previousTime;
 
         Effect shader, textured, shadertextured, texturedAlpha, billboardEffect, bump;
@@ -52,6 +54,9 @@ namespace Graphics3D
         int trilinear = 0;
         int levels = 0;
 
+        int height = 576;
+        int width = 1024;
+
         Texture2D heliTexture, shipTexture, asteroidTexture, planeBackTexture, normalMap;
 
         //primitives
@@ -67,8 +72,8 @@ namespace Graphics3D
             graphics.GraphicsProfile = GraphicsProfile.HiDef;
 
             graphics.IsFullScreen = false;
-            graphics.PreferredBackBufferHeight = 576;
-            graphics.PreferredBackBufferWidth = 1024;
+            graphics.PreferredBackBufferHeight = height;
+            graphics.PreferredBackBufferWidth = width;
 
             Content.RootDirectory = "Content";
         }
@@ -81,6 +86,8 @@ namespace Graphics3D
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            hudManager = new HudManager(Content, GraphicsDevice, spriteBatch, width, height);
 
             camera = new Camera(GraphicsDevice);
             projection = camera.Projection;
@@ -178,6 +185,9 @@ namespace Graphics3D
 
         protected override void Update(GameTime gameTime)
         {
+            hudManager.Update(gameTime);
+                       
+
             if (previousTime == null)
             {
                 previousTime = gameTime.TotalGameTime;
@@ -231,6 +241,26 @@ namespace Graphics3D
                 {
                     levels = (levels + 1) % 8;
                 }
+            }
+
+            int size = hudManager.SelectedEffectIndex;
+            switch(size)
+            {
+                case 0:
+                    graphics.PreferredBackBufferWidth = 1024;
+                    graphics.PreferredBackBufferHeight = 576;
+                    graphics.ApplyChanges();
+                    break;
+                case 1:
+                    graphics.PreferredBackBufferWidth = 1600;
+                    graphics.PreferredBackBufferHeight = 900;
+                    graphics.ApplyChanges();
+                    break;
+                case 2:
+                    graphics.PreferredBackBufferWidth = 1280;
+                    graphics.PreferredBackBufferHeight = 720;
+                    graphics.ApplyChanges();
+                    break;
             }
 
             oldState = newState;
@@ -313,6 +343,8 @@ namespace Graphics3D
             DrawScene(camera.View);
 
             planeFront.DrawAsShader(textured, camera, GraphicsDevice, world, camera.View, projection, renderTarget, 0.0f, 0.0f);
+
+            hudManager.Draw(gameTime);
 
             base.Draw(gameTime);
         }

@@ -61,6 +61,7 @@
     <Compile Include="CoordsHelper.cs" />
     <Compile Include="DrawHelper.cs" />
     <Compile Include="Game1.cs" />
+    <Compile Include="HudManager.cs" />
     <Compile Include="Plane.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
