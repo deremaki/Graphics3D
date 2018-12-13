@@ -28,7 +28,7 @@ namespace Graphics3D
         public Camera camera;
 
         Matrix projection;
-        Matrix view;
+       // Matrix view;
         Matrix world;
 
         Skybox skybox;
@@ -303,20 +303,20 @@ namespace Graphics3D
 
         protected override void Draw(GameTime gameTime)
         {
-            DrawSceneToTexture(renderTarget);
+            //Matrix.CreateLookAt(cameraPosition, cameraLookAt, cameraUpVector)
+            //DrawSceneToTexture(renderTarget, camera.View);
+            DrawSceneToTexture(renderTarget, Matrix.CreateLookAt(new Vector3(-14.55f, 0.0f, 79.95f), new Vector3(8.36f, 37.89f, 17.88f), new Vector3(0.15f, 0.98f, 0.13f)));
 
             GraphicsDevice.Clear(Color.Black);
-            DrawScene();
+            DrawScene(camera.View);
 
-            planeFront.DrawAsShader(textured, camera, GraphicsDevice, world, view, projection, renderTarget, 0.0f);
+            planeFront.DrawAsShader(textured, camera, GraphicsDevice, world, camera.View, projection, renderTarget, 0.0f, 0.0f);
 
             base.Draw(gameTime);
         }
 
-        private void DrawScene()
+        private void DrawScene(Matrix view)
         {
-            view = camera.View;
-
             GraphicsDevice.RasterizerState = RasterizerState.CullClockwise;
             skybox.Draw(view, projection, camera.Position);
             GraphicsDevice.RasterizerState = RasterizerState.CullCounterClockwise;
@@ -359,7 +359,7 @@ namespace Graphics3D
 
 
             //DrawAsBillboard(plane, world, view, projection, new Vector3(-72.0f, -10.0f, 10.0f), Color.Red, 0.03f, asteroidTexture);
-            planeBack.DrawAsShader(textured, camera, GraphicsDevice, world, view, projection, planeBackTexture, 180.0f);
+            planeBack.DrawAsShader(textured, camera, GraphicsDevice, world, view, projection, planeBackTexture, 0.0f, 180.0f);
 
             billboard.DrawBillboard(billboardEffect, camera, projection, asteroidTexture, 4.0f);
             billboard1.DrawBillboard(billboardEffect, camera, projection, asteroidTexture, 2.0f);
@@ -442,7 +442,7 @@ namespace Graphics3D
             }
         }
 
-        private void DrawSceneToTexture(RenderTarget2D renderTarget)
+        private void DrawSceneToTexture(RenderTarget2D renderTarget, Matrix view)
         {
             GraphicsDevice.SetRenderTarget(renderTarget);
 
@@ -450,7 +450,7 @@ namespace Graphics3D
 
             // Draw the scene
             GraphicsDevice.Clear(Color.Black);
-            DrawScene();
+            DrawScene(view);
 
             // Drop the render target
             GraphicsDevice.SetRenderTarget(null);

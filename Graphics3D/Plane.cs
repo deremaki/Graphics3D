@@ -105,14 +105,15 @@ namespace Graphics3D
             }
         }
 
-        public void DrawAsShader(Effect effect, Camera camera, GraphicsDevice graphicsDevice, Matrix world, Matrix view, Matrix projection, Texture2D texture, float rotation)
+        public void DrawAsShader(Effect effect, Camera camera, GraphicsDevice graphicsDevice, Matrix world, Matrix view, Matrix projection, Texture2D texture, float rotationX, float rotationY)
         {
             graphicsDevice.SetVertexBuffer(this.vertexBuffer);
             graphicsDevice.Indices = this.indexBuffer;
 
-
-
-            world = world * Matrix.CreateRotationY(MathHelper.ToRadians(rotation));
+            world = world
+                
+                * Matrix.CreateRotationY(MathHelper.ToRadians(rotationY))
+                * Matrix.CreateRotationZ(MathHelper.ToRadians(rotationX));
 
             effect.Parameters["World"].SetValue(world);
             effect.Parameters["View"].SetValue(view);
